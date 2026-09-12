@@ -18,3 +18,7 @@ __pycache__/
 .venv/
 .pytest_cache/
 scenarios/demo_pilot_gt.json
+
+# SQLite journal/WAL sidecars for the local session store
+.sessions.db-shm
+.sessions.db-wal
