@@ -125,7 +125,7 @@ def record_tool_result(ctx: "AuthContext", result: dict[str, Any]) -> None:
     span.set_attribute("cartwheel.user_role", ctx.role)
     span.set_attribute("cartwheel.user_id", str(ctx.user_id))
     if ctx.store_id is not None:
-        span.set_attribute("cartwheel.store_id", ctx.store_id)
+        span.set_attribute("cartwheel.store_id", str(ctx.store_id))
     _set_permission_denied_attributes(span, result)
 
 def _set_permission_denied_attributes(
