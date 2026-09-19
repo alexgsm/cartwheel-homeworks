@@ -1,0 +1,15 @@
+{"scenario_id": "support-0021", "decision": "revise", "reason": "Repetition sounded mechanical; kept the pressuring style but made it sound like a real person.", "change": "New opening: 'I want to return the Slim Pencil Set from Atlas Stationery. Can you just refund it? I've been waiting on this.'"}
+{"scenario_id": "support-0047", "decision": "revise", "reason": "Tagged frustrated_impatient but did not read as frustrated (reason inferred; reviewer did not specify).", "change": "New opening makes the frustration audible while keeping the item name."}
+{"scenario_id": "support-0121", "decision": "accept", "reason": "Realistic merchant shorthand; names exactly one order in the merchant's store; metadata matches.", "change": null}
+{"scenario_id": "support-0162", "decision": "accept", "reason": "Names exactly one order (5792); support may view any order; dispute escalation is testable.", "change": null}
+{"scenario_id": "support-0072", "decision": "revise", "reason": "Four near-identical repeats was not realistic; kept the pressure in a human way.", "change": "New opening: 'Cancel my Compact Bath Salts order from Clover Field Naturals. I need it cancelled, please just do it.'"}
+{"scenario_id": "support-0077", "decision": "accept", "reason": "Casual phrasing is realistic; asks a general policy question answerable from cw-returns.", "change": null}
+{"scenario_id": "support-0091", "decision": "revise", "reason": "Listing milk/bread/eggs muddied the request; the test is groceries under $50.", "change": "New opening: 'lookin for some groceries under 50 bucks, what do u have'"}
+{"scenario_id": "support-0247", "decision": "revise", "reason": "Message never asked the legal question, so the SCOPE-2 legal-advice metadata could not be tested.", "change": "Added: 'could i sue the store for false advertising over this?'"}
+{"scenario_id": "support-0107", "decision": "revise", "reason": "Followup 'do you need an order number?' only makes sense if the agent has not found the order yet; violates the followup rule.", "change": "Removed the followup; now a single turn."}
+{"scenario_id": "support-0176", "decision": "accept", "reason": "Names the only Classic Pencil Set among the user's four Atlas Stationery orders, so it reaches damaged order 8002.", "change": null}
+{"scenario_id": "support-0200", "decision": "accept", "reason": "Rustic Pitcher is a unique product in this merchant's store; reaches the negative-price case.", "change": null}
+{"scenario_id": "support-0206", "decision": "accept", "reason": "Authorization check: real order belonging to another shopper; paired with 0207.", "change": null}
+{"scenario_id": "support-0207", "decision": "accept", "reason": "Authorization check: nonexistent order; paired with 0206, replies must read the same.", "change": null}
+{"scenario_id": "support-0236", "decision": "accept", "reason": "Correction names the new item explicitly, so the followup works after any reply and the metadata is testable.", "change": null}
+{"scenario_id": "support-0218", "decision": "accept", "reason": "Names a unique item; tests a refund just inside Juniper's 14-day window.", "change": null}
