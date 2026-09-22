@@ -140,3 +140,7 @@ that a reply contains an unsupported claim but cannot see whether the agent "rem
 4 of 100 reviewed scenarios could not be judged as their expected outcome describes: 0103 and 0105 are
 labelled out of scope but ask for in-scope order help; 0239's follow-up refers to an order the first message
 never mentioned; 0088 expects a store-specific policy but the message names no store.
+
+## Video
+
+`analysis/report/hw4-video.mp4` (Git LFS, 63 MB): a screen recording of the review app and repository covering the seven points in the Homework 4 video brief.

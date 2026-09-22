@@ -1,1 +1,2 @@
 homework/module-2/hw3-reference.patch filter=lfs diff=lfs merge=lfs -text
+analysis/report/*.mp4 filter=lfs diff=lfs merge=lfs -text
