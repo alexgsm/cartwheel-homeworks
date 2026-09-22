@@ -1,0 +1,924 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartwheel Trace Review</title>
+<style>
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --ink: #1d1d1f; --muted: #6b6b70; --line: #e3e3e0;
+  --user: #2f6fdb; --user-bg: #eef3fc;
+  --asst: #1f8a4c; --asst-bg: #edf7f1;
+  --tool: #c26a12; --tool-bg: #fdf4ea;
+  --sys: #7a7a80; --sys-bg: #f1f1f0;
+  --err: #c9302c; --err-bg: #fdecec;
+  --note: #d99a00; --note-bg: #fff8e1;
+  --sugg: #7c4dcc; --sugg-bg: #f4effd;
+  --fine: #1f8a4c;
+  --focus: #2f6fdb;
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161618; --panel: #1f1f22; --ink: #ececef; --muted: #9a9aa2; --line: #333338;
+    --user: #6ea0ff; --user-bg: #1c2638; --asst: #4fc27f; --asst-bg: #17291f;
+    --tool: #f0a04b; --tool-bg: #2c2216; --sys: #a0a0a8; --sys-bg: #26262a;
+    --err: #ff6b66; --err-bg: #3a1c1c; --note: #f5c542; --note-bg: #2e2812;
+    --sugg: #b18cff; --sugg-bg: #251d38; --fine: #4fc27f; --focus: #6ea0ff;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161618; --panel: #1f1f22; --ink: #ececef; --muted: #9a9aa2; --line: #333338;
+  --user: #6ea0ff; --user-bg: #1c2638; --asst: #4fc27f; --asst-bg: #17291f;
+  --tool: #f0a04b; --tool-bg: #2c2216; --sys: #a0a0a8; --sys-bg: #26262a;
+  --err: #ff6b66; --err-bg: #3a1c1c; --note: #f5c542; --note-bg: #2e2812;
+  --sugg: #b18cff; --sugg-bg: #251d38; --fine: #4fc27f; --focus: #6ea0ff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--sans); }
+button { font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 3px 10px; cursor: pointer; }
+button:hover { border-color: var(--muted); }
+button.primary { background: var(--focus); color: #fff; border-color: var(--focus); }
+button:disabled { opacity: .45; cursor: default; }
+kbd { font: 11px var(--mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; color: var(--muted); }
+input, select, textarea { font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+a { color: var(--focus); }
+
+/* top bar */
+#top { position: sticky; top: 0; z-index: 20; background: var(--panel); border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 16px; }
+#top h1 { font-size: 15px; margin: 0; }
+#tabs { display: flex; gap: 2px; }
+#tabs button { border: none; border-radius: 6px; padding: 4px 10px; background: none; color: var(--muted); }
+#tabs button.on { background: var(--bg); color: var(--ink); font-weight: 600; }
+#progressline { color: var(--muted); font-size: 13px; }
+#progressline b { color: var(--ink); }
+#saved { margin-left: auto; font-size: 13px; color: var(--muted); }
+#saved.bad { color: var(--err); font-weight: 600; }
+
+main { padding: 16px; max-width: 1240px; margin: 0 auto; }
+
+/* batch strip */
+#strip { display: flex; flex-wrap: wrap; gap: 3px; margin: 4px 0 10px; }
+#strip span { width: 14px; height: 14px; border-radius: 3px; background: var(--line); cursor: pointer; }
+#strip span.noted { background: var(--note); }
+#strip span.fine { background: var(--fine); }
+#strip span.cur { outline: 2px solid var(--ink); outline-offset: 1px; }
+.legendmini i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin: 0 3px 0 8px; vertical-align: -1px; }
+.navline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+
+/* conversation header */
+.hdr { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+.hdr .title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.hdr .title b { font-size: 18px; }
+.chip { display: inline-block; font-size: 12px; border-radius: 10px; padding: 0 8px; background: var(--bg); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.chip.flag { background: var(--note-bg); border-color: var(--note); color: var(--ink); }
+.chip.errc { background: var(--err-bg); border-color: var(--err); color: var(--err); }
+.chip.sugg { background: var(--sugg-bg); border-color: var(--sugg); color: var(--sugg); }
+.scn { margin-top: 8px; font-size: 13.5px; }
+.scn .line { cursor: pointer; }
+.scn .line b { color: var(--muted); font-weight: 600; }
+.scn table { border-collapse: collapse; margin-top: 6px; font-size: 12.5px; }
+.scn td { padding: 1px 10px 1px 0; vertical-align: top; }
+.scn td:first-child { color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; align-items: center; }
+
+/* rows: content + margin */
+.row { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 16px; margin-bottom: 8px; }
+.row.gapbig { margin-top: 26px; }
+.margin { position: relative; min-height: 1px; }
+.turnlabel { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin: 20px 0 6px; }
+.block { border-left: 4px solid var(--line); background: var(--panel); border-radius: 0 8px 8px 0; padding: 8px 12px; position: relative; }
+.block .who { font-size: 11.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; margin-bottom: 2px; }
+.block .txt { white-space: pre-wrap; overflow-wrap: anywhere; }
+.b-user { border-color: var(--user); background: var(--user-bg); }
+.b-user .who { color: var(--user); }
+.b-asst { border-color: var(--asst); background: var(--asst-bg); }
+.b-asst .who { color: var(--asst); }
+.b-asst .txt { font-size: 15.5px; }
+.b-tool { border-color: var(--tool); background: var(--tool-bg); font-size: 13.5px; }
+.b-tool .who { color: var(--tool); text-transform: none; font-family: var(--mono); font-size: 13px; }
+.b-tool.err { border-color: var(--err); background: var(--err-bg); }
+.b-sys { border-color: var(--sys); background: var(--sys-bg); font-size: 13px; color: var(--muted); }
+.b-sys .who { color: var(--sys); }
+.b-sys pre { opacity: .7; }
+.b-sys .specific { color: var(--ink); font-weight: 600; opacity: 1; }
+pre { font: 12.5px/1.45 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 0; }
+code { font: 12.5px var(--mono); }
+details > summary { cursor: pointer; color: var(--muted); font-size: 12.5px; }
+.errtag { display: inline-block; background: var(--err); color: #fff; font-size: 11px; font-weight: 700; border-radius: 4px; padding: 0 6px; margin-left: 6px; font-family: var(--sans); }
+.writetag { display: inline-block; border: 1px solid var(--tool); color: var(--tool); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 0 5px; margin-left: 6px; font-family: var(--sans); }
+.stepsline { background: var(--tool-bg); border-left: 4px solid var(--tool); border-radius: 0 8px 8px 0; padding: 6px 12px; font-size: 13.5px; cursor: pointer; }
+.stepsline:hover { filter: brightness(.97); }
+.stepsline code { font-size: 12.5px; }
+.stepsline .sep { color: var(--muted); margin: 0 5px; }
+.stepsgroup .block { margin-bottom: 4px; }
+
+mark { background: var(--note-bg); border-bottom: 2px solid var(--note); color: inherit; padding: 0 1px; }
+mark.s { background: var(--sugg-bg); border-bottom: 2px dashed var(--sugg); }
+mark.hot, .mnote.hot { outline: 2px solid var(--note); }
+mark.s.hot, .mnote.s.hot { outline-color: var(--sugg); }
+.pending { background: #ffe58f; color: #000; }
+
+/* margin notes */
+.mnote { background: var(--note-bg); border-left: 3px solid var(--note); border-radius: 0 6px 6px 0; padding: 5px 8px; font-size: 13px; margin-bottom: 6px; position: relative; }
+.mnote .q { color: var(--muted); font-style: italic; font-size: 12px; margin-bottom: 2px; overflow-wrap: anywhere; }
+.mnote .ctl { position: absolute; top: 3px; right: 4px; display: none; gap: 3px; }
+.mnote:hover .ctl { display: flex; }
+.mnote .ctl button { padding: 0 6px; font-size: 11.5px; }
+.mnote.fine { background: none; border-left-color: var(--fine); color: var(--fine); font-weight: 600; }
+.mnote.s { background: var(--sugg-bg); border-left: 3px dashed var(--sugg); }
+.mnote.s .tag { font-size: 10.5px; font-weight: 700; text-transform: uppercase; color: var(--sugg); letter-spacing: .04em; }
+.mnote.s .sbtn { display: flex; gap: 5px; margin-top: 5px; }
+.mnote.acc { background: var(--note-bg); border-left: 3px solid var(--sugg); }
+.addnote { opacity: 0; font-size: 12px; padding: 1px 8px; }
+.row:hover .addnote { opacity: .8; }
+.editor { background: var(--panel); border: 2px solid var(--note); border-radius: 8px; padding: 8px; margin-bottom: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+.editor .q { font-size: 12px; font-style: italic; color: var(--muted); margin-bottom: 4px; overflow-wrap: anywhere; }
+.editor textarea { width: 100%; min-height: 64px; resize: vertical; }
+.editor .hint { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+.editor .sugglist { max-height: 140px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; margin-top: 4px; font-size: 12.5px; }
+.editor .sugglist div { padding: 3px 6px; cursor: pointer; }
+.editor .sugglist div.on, .editor .sugglist div:hover { background: var(--note-bg); }
+#floatbtn { position: absolute; z-index: 30; display: none; background: var(--note); color: #000; border: none; font-size: 12.5px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+
+/* compare */
+.cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cmp .col h3 { margin: 0 0 6px; font-size: 15px; }
+.cmp .row { grid-template-columns: 1fr; }
+
+/* search overlay */
+#overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 50; display: none; align-items: flex-start; justify-content: center; padding: 60px 16px; }
+#overlay .box { background: var(--panel); border-radius: 12px; width: min(820px, 100%); max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,.3); }
+#overlay .box > div:first-child { padding: 12px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#q { flex: 1; min-width: 220px; font-size: 16px; }
+#results { overflow: auto; }
+#results .r { padding: 7px 12px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 110px 1fr auto; gap: 10px; align-items: center; cursor: pointer; font-size: 13.5px; }
+#results .r:hover, #results .r.on { background: var(--bg); }
+#results .r .u { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* labels grid */
+.lg { border-collapse: collapse; background: var(--panel); font-size: 13px; width: 100%; }
+.lg th, .lg td { border: 1px solid var(--line); padding: 4px 6px; }
+.lg th { position: sticky; top: 50px; background: var(--panel); font-size: 12px; vertical-align: bottom; }
+.lg th .k { color: var(--muted); font-weight: 400; }
+.lg td.cell { text-align: center; cursor: pointer; width: 70px; font-weight: 700; user-select: none; }
+.lg td.cell.p { background: var(--err-bg); color: var(--err); }
+.lg td.cell.a { color: var(--muted); font-weight: 400; }
+.lg td.cell.b { color: var(--line); }
+.lg td.cell .sync { font-size: 10px; vertical-align: super; color: var(--note); }
+.lg td.cell .prop { color: var(--muted); font-weight: 400; font-style: italic; opacity: .75; }
+.lg tr.on td { outline: 2px solid var(--focus); outline-offset: -2px; }
+.lg td.notes { color: var(--muted); max-width: 420px; font-size: 12.5px; }
+.lg td.id { white-space: nowrap; cursor: pointer; color: var(--focus); }
+
+/* taxonomy */
+.tx { display: flex; flex-wrap: wrap; gap: 10px; }
+.tx .mode { background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--note); border-radius: 8px; padding: 10px 12px; min-width: 260px; }
+.tx .mode h3 { margin: 0; font-size: 15px; font-family: var(--mono); }
+.tx .mode .def { font-size: 13.5px; margin: 4px 0; }
+.tx .mode .meta { font-size: 12px; color: var(--muted); }
+.tx .mode ul { padding-left: 18px; margin: 6px 0 0; font-size: 13px; }
+.tx .mode li { cursor: pointer; }
+.tx .mode li:hover { text-decoration: underline; }
+.tx .mode.un { border-top-color: var(--line); }
+
+/* progress */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+.card h2 { font-size: 15px; margin: 0 0 8px; }
+.pt { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+.pt td, .pt th { padding: 4px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+.bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; min-width: 120px; }
+.bar i { display: block; height: 100%; background: var(--fine); }
+.sq .srow { display: grid; grid-template-columns: 24px 170px 110px 1fr; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--line); font-size: 13px; align-items: start; }
+.sq .srow .qt { cursor: pointer; }
+.sq .srow .qt:hover { text-decoration: underline; }
+.pill { font-size: 12px; color: var(--muted); }
+.linklist span { cursor: pointer; color: var(--focus); margin-right: 8px; white-space: nowrap; }
+
+/* map */
+#mapwrap { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+#map { width: 100%; height: 600px; display: block; }
+#tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12.5px; border-radius: 6px; padding: 5px 8px; display: none; max-width: 320px; }
+.legend { font-size: 12.5px; color: var(--muted); margin: 8px 0; display: flex; gap: 14px; flex-wrap: wrap; }
+
+#toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 8px; font-size: 14px; display: none; z-index: 60; }
+#help { font-size: 12.5px; color: var(--muted); margin-top: 24px; line-height: 2; }
+.empty { color: var(--muted); padding: 30px; text-align: center; }
+
+@media (max-width: 820px) {
+  .row { grid-template-columns: 1fr; }
+  .cmp { grid-template-columns: 1fr; }
+  #saved { margin-left: 0; }
+  .sq .srow { grid-template-columns: 24px 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="top">
+  <h1>Trace review</h1>
+  <div id="tabs"></div>
+  <select id="batchsel" title="Batch"></select>
+  <span id="progressline"></span>
+  <button id="searchbtn" title="Search all conversations">Search <kbd>/</kbd></button>
+  <span id="saved">Loading…</span>
+</div>
+<main id="main"></main>
+<button id="floatbtn">+ Note <kbd>n</kbd></button>
+<div id="overlay"><div class="box">
+  <div>
+    <input id="q" placeholder="Search id, role, tool, text…  (try: error, write, multi)" autocomplete="off">
+    <label class="pill"><input type="checkbox" id="onlyfree"> not in any batch</label>
+    <select id="addto" title="Add selected results to this batch"></select>
+  </div>
+  <div id="results"></div>
+</div></div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const LANGFUSE = "http://localhost:3000/project/cartwheel-dev/traces/";
+const VIEWS = [["review", "Review"], ["labels", "Labels"], ["taxonomy", "Taxonomy"], ["progress", "Progress"], ["map", "Map"]];
+const CLUSTER_COLORS = ["#2f6fdb", "#1f8a4c", "#c26a12", "#7c4dcc", "#c9302c", "#0f8f8f", "#b5467d", "#6b6b20"];
+
+let DATA = null, BYID = {}, COMMON_PROMPT = "";
+let manifest = { batches: [] }, annotations = [], patterns = { modes: [] }, suggestions = [], labels = {}, proposed = {};
+let langfuseOn = false;
+const ui = { view: "review", batch: "batch1", conv: null, expanded: false, compare: null, editor: null, labelRow: 0, sel: null, showScn: false };
+const undoStack = [];
+
+/* ---------- helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const now = () => new Date().toISOString().replace(/\.\d+Z$/, "Z");
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = "none", 2600); }
+function store(k, v) { try { localStorage.setItem("ra." + k, JSON.stringify(v)); } catch (e) {} }
+function load(k, d) { try { const v = localStorage.getItem("ra." + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+async function api(path, body) {
+  const r = await fetch(path, body === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const j = await r.json();
+  if (!r.ok || j.ok === false) throw new Error(j.error || r.statusText);
+  return j;
+}
+function setSaved(state) {
+  const el = $("#saved");
+  el.className = state === "bad" ? "bad" : "";
+  el.textContent = state === "saving" ? "Saving…" : state === "bad" ? "Save failed: kept in this browser, will retry" : "Saved ✓";
+}
+function jsonShort(v) { if (v == null) return ""; const s = JSON.stringify(v); return s === "{}" ? "" : s; }
+function jsonPretty(v) { return JSON.stringify(v, null, 2); }
+
+/* ---------- derived state ---------- */
+function batchOf(convId) { for (const b of manifest.batches) if (b.items.some(i => i.conv_id === convId)) return b.name; return null; }
+function batchItems(name) { const b = manifest.batches.find(b => b.name === name); return b ? b.items.map(i => i.conv_id) : []; }
+function humanAnns(convId) { return annotations.filter(a => a.conv_id === convId); }
+function status(convId) {
+  const a = humanAnns(convId);
+  if (a.some(x => x.kind !== "no_failure")) return "noted";
+  if (a.some(x => x.kind === "no_failure")) return "fine";
+  return "unread";
+}
+const isRead = id => status(id) !== "unread";
+function reviewedIds() { const s = new Set(); for (const b of manifest.batches) for (const i of b.items) if (isRead(i.conv_id)) s.add(i.conv_id); return [...s]; }
+function modesList() { return (patterns.modes || []).filter(m => m.name && m.status !== "rejected"); }
+function labelModes() {
+  const all = modesList();
+  const fin = all.filter(m => m.status === "final");
+  return fin.length ? fin : all;
+}
+function annBatchIndex(annId) { const a = annotations.find(x => x.id === annId); if (!a) return 99; const b = batchOf(a.conv_id); const i = manifest.batches.findIndex(x => x.name === b); return i < 0 ? 99 : i; }
+function modeFirstBatch(m) { const idx = (m.annotation_ids || []).map(annBatchIndex); return idx.length ? Math.min(...idx) : 99; }
+function pendingSugg(convId) { return suggestions.filter(s => s.conv_id === convId && (s.status || "pending") === "pending"); }
+
+/* ---------- persistence ---------- */
+let saveTimer = null;
+function pushUndo() { undoStack.push(JSON.stringify({ annotations, suggestions })); if (undoStack.length > 50) undoStack.shift(); }
+async function saveAnnotations() {
+  store("annotations_backup", annotations);
+  setSaved("saving");
+  try { await api("/api/annotations", { annotations }); setSaved("ok"); store("unsynced", false); }
+  catch (e) { setSaved("bad"); store("unsynced", true); clearTimeout(saveTimer); saveTimer = setTimeout(saveAnnotations, 4000); }
+}
+async function saveSuggestions() {
+  setSaved("saving");
+  try { await api("/api/suggestions", suggestions); setSaved("ok"); } catch (e) { setSaved("bad"); }
+}
+async function saveManifest() {
+  setSaved("saving");
+  try { await api("/api/manifest", manifest); setSaved("ok"); } catch (e) { setSaved("bad"); }
+}
+function remember() { store("ui", { view: ui.view, batch: ui.batch, conv: ui.conv, expanded: ui.expanded, labelRow: ui.labelRow }); }
+
+/* ---------- annotation actions ---------- */
+function addNote(convId, block, quote, text, extra = {}) {
+  pushUndo();
+  const c = BYID[convId];
+  const turn = block.startsWith("t") ? parseInt(block.slice(1)) : null;
+  annotations = annotations.filter(a => !(a.conv_id === convId && a.kind === "no_failure"));
+  annotations.push({
+    id: "ann-" + uid(), conv_id: convId, trace_id: turn != null ? c.turns[turn].trace_id : c.trace_ids[0],
+    trace_ids: c.trace_ids, block, quote: quote || "", note: text, kind: "note", source: "human",
+    batch: batchOf(convId), created: now(), ...extra,
+  });
+  saveAnnotations();
+}
+function markFine(convId) {
+  if (humanAnns(convId).some(a => a.kind !== "no_failure")) { toast("This one already has notes"); return false; }
+  if (status(convId) === "fine") return true;
+  pushUndo();
+  const c = BYID[convId];
+  annotations.push({ id: "ann-" + uid(), conv_id: convId, trace_id: c.trace_ids[0], trace_ids: c.trace_ids, block: "conv", quote: "", note: "no failure observed", kind: "no_failure", source: "human", batch: batchOf(convId), created: now() });
+  saveAnnotations();
+  return true;
+}
+function deleteNote(id) { pushUndo(); annotations = annotations.filter(a => a.id !== id); saveAnnotations(); render(); }
+function editNote(id) { const a = annotations.find(x => x.id === id); if (a) { ui.editor = { block: a.block, quote: a.quote, editId: id, text: a.note }; render(); } }
+function undo() {
+  const s = undoStack.pop();
+  if (!s) { toast("Nothing to undo"); return; }
+  const prev = JSON.parse(s);
+  annotations = prev.annotations; suggestions = prev.suggestions;
+  saveAnnotations(); saveSuggestions(); render(); toast("Undone");
+}
+async function decideSuggestions(ids, decision) {
+  // re-read first so decisions never overwrite suggestions the agent just pushed
+  try { const fresh = await api("/api/suggestions"); if (Array.isArray(fresh)) mergeSuggestions(fresh); } catch (e) {}
+  pushUndo();
+  for (const id of ids) {
+    const s = suggestions.find(x => x.id === id);
+    if (!s || (s.status || "pending") !== "pending") continue;
+    s.status = decision; s.decided_at = now();
+    if (decision === "accepted") {
+      const c = BYID[s.conv_id];
+      const annId = "ann-" + uid();
+      annotations = annotations.filter(a => !(a.conv_id === s.conv_id && a.kind === "no_failure"));
+      annotations.push({ id: annId, conv_id: s.conv_id, trace_id: c ? c.trace_ids[0] : null, trace_ids: c ? c.trace_ids : [], block: s.block || "conv", quote: s.quote || "", note: s.note || s.reason || s.mode, kind: "note", source: "accepted_suggestion", suggestion_id: s.id, mode: s.mode, batch: batchOf(s.conv_id), created: now() });
+      s.annotation_id = annId;
+    }
+  }
+  saveAnnotations(); saveSuggestions(); render();
+  toast(`${ids.length} suggestion${ids.length > 1 ? "s" : ""} ${decision}`);
+  // once the open conversation has nothing left to decide, move on
+  if (ui.view === "review" && ui.conv && isRead(ui.conv) && !pendingSugg(ui.conv).length) {
+    setTimeout(nextUnread, 400);
+  }
+}
+function mergeSuggestions(fresh) {
+  const mine = new Map(suggestions.map(s => [s.id, s]));
+  suggestions = fresh.map(f => { const m = mine.get(f.id); return m && (m.status || "pending") !== "pending" && (f.status || "pending") === "pending" ? m : f; });
+}
+
+/* ---------- navigation ---------- */
+function openConv(id, opts = {}) {
+  ui.conv = id; ui.view = "review"; ui.editor = null; ui.compare = null; ui.sel = null;
+  if (!opts.keepExpanded) ui.expanded = false;
+  const b = batchOf(id); if (b) ui.batch = b;
+  remember(); render(); window.scrollTo(0, 0);
+}
+function stepConv(dir) {
+  const items = batchItems(ui.batch); if (!items.length) return;
+  let i = items.indexOf(ui.conv); i = i < 0 ? 0 : (i + dir + items.length) % items.length;
+  openConv(items[i]);
+}
+function nextUnread() {
+  const items = batchItems(ui.batch);
+  const i = items.indexOf(ui.conv);
+  for (let k = 1; k <= items.length; k++) { const id = items[(i + k) % items.length]; if (!isRead(id)) { openConv(id); return; } }
+  toast("Every conversation in this batch is read 🎉"); render();
+}
+
+/* ---------- rendering: shared ---------- */
+function renderTop() {
+  $("#tabs").innerHTML = VIEWS.map(([k, t]) => `<button data-view="${k}" class="${ui.view === k ? "on" : ""}">${t}</button>`).join("");
+  $("#batchsel").innerHTML = manifest.batches.map(b => `<option value="${b.name}" ${b.name === ui.batch ? "selected" : ""}>${esc(b.title)} (${b.items.filter(i => isRead(i.conv_id)).length}/${b.items.length})</option>`).join("");
+  const items = batchItems(ui.batch);
+  const read = items.filter(isRead).length;
+  const notes = annotations.filter(a => a.kind !== "no_failure" && a.batch === ui.batch).length;
+  const bi = manifest.batches.findIndex(b => b.name === ui.batch);
+  const newModes = modesList().filter(m => modeFirstBatch(m) === bi).length;
+  const total = reviewedIds().length;
+  $("#progressline").innerHTML = `<b>${read}/${items.length}</b> read · ${notes} notes · ${modesList().length ? `<b>${newModes}</b> new failure type${newModes === 1 ? "" : "s"} this batch · ` : ""}${total}/100 total`;
+}
+
+function highlight(text, anns, suggs) {
+  // Mark the first occurrence of each quote. Quotes come from a selection inside
+  // this same block, so an exact substring match is reliable.
+  let html = esc(text);
+  const marks = [...anns.map(a => ({ q: a.quote, id: a.id, s: false })), ...suggs.map(s => ({ q: s.quote, id: s.id, s: true }))].filter(m => m.q);
+  for (const m of marks) {
+    const q = esc(m.q); const i = html.indexOf(q);
+    if (i < 0 || html.slice(0, i).lastIndexOf("<mark") > html.slice(0, i).lastIndexOf("</mark>")) continue;
+    html = html.slice(0, i) + `<mark data-link="${m.id}" class="${m.s ? "s" : ""}">${q}</mark>` + html.slice(i + q.length);
+  }
+  return html;
+}
+
+function marginFor(convId, block, showSugg) {
+  const anns = humanAnns(convId).filter(a => (a.block || "conv") === block);
+  const suggs = showSugg ? pendingSugg(convId).filter(s => (s.block || "conv") === block) : [];
+  let h = "";
+  if (ui.editor && ui.editor.block === block && ui.conv === convId) h += editorHtml();
+  for (const a of anns) {
+    if (ui.editor && ui.editor.editId === a.id) continue;
+    if (a.kind === "no_failure") { h += `<div class="mnote fine" data-link="${a.id}">✓ No failure observed<div class="ctl"><button data-del="${a.id}" title="Delete">✕</button></div></div>`; continue; }
+    const acc = a.source === "accepted_suggestion";
+    h += `<div class="mnote ${acc ? "acc" : ""}" data-link="${a.id}">${a.quote ? `<div class="q">“${esc(a.quote.slice(0, 90))}${a.quote.length > 90 ? "…" : ""}”</div>` : ""}${acc ? `<span class="chip sugg">accepted · ${esc(a.mode || "")}</span> ` : ""}${esc(a.note)}<div class="ctl"><button data-edit="${a.id}">Edit</button><button data-del="${a.id}" title="Delete">✕</button></div></div>`;
+  }
+  for (const s of suggs) {
+    h += `<div class="mnote s" data-link="${s.id}"><div class="tag">AI suggestion · ${esc(s.mode)}</div>${s.quote ? `<div class="q">“${esc(s.quote.slice(0, 90))}”</div>` : ""}${esc(s.reason || s.note || "")}<div class="sbtn"><button data-acc="${s.id}">Accept</button><button data-rej="${s.id}">Reject</button></div></div>`;
+  }
+  return h;
+}
+
+function editorHtml() {
+  const e = ui.editor;
+  return `<div class="editor">${e.quote ? `<div class="q">On: “${esc(e.quote.slice(0, 120))}”</div>` : `<div class="q">Note on the whole conversation</div>`}
+    <textarea id="notebox" placeholder="What's wrong? Be specific: what happened vs what should have happened.">${esc(e.text || "")}</textarea>
+    <div class="sugglist" id="prevnotes" style="display:none"></div>
+    <div class="hint"><kbd>Enter</kbd> save · <kbd>Shift+Enter</kbd> new line · <kbd>↓</kbd> reuse an earlier note · <kbd>Esc</kbd> cancel</div></div>`;
+}
+
+/* ---------- rendering: review ---------- */
+function stepsSummary(steps) {
+  if (!steps.length) return `<i>No tool calls</i>`;
+  return `${steps.length} tool call${steps.length > 1 ? "s" : ""}: ` + steps.map(s => `<code>${esc(s.tool)}</code>${s.error ? `<span class="errtag">✗ ${esc(s.error)}</span>` : ""}${s.write ? `<span class="writetag">write</span>` : ""}`).join(`<span class="sep">→</span>`);
+}
+
+function convBody(c, opts = {}) {
+  const interactive = !opts.readonly;
+  const showSugg = interactive && isRead(c.id);
+  const anns = interactive ? humanAnns(c.id) : [];
+  const sugg = showSugg ? pendingSugg(c.id) : [];
+  const expanded = opts.readonly ? true : ui.expanded;
+  const row = (block, inner, cls = "") => `<div class="row ${cls}" data-block="${block}"><div>${inner}</div><div class="margin">${interactive ? marginFor(c.id, block, showSugg) + (ui.editor && ui.editor.block === block ? "" : `<button class="addnote" data-add="${block}">+ note</button>`) : ""}</div></div>`;
+  const forBlock = b => [anns.filter(a => a.block === b), sugg.filter(s => s.block === b)];
+  let h = "";
+  c.turns.forEach((t, ti) => {
+    if (c.turns.length > 1) h += `<div class="turnlabel">Turn ${ti + 1} of ${c.turns.length}${interactive ? ` · <a href="${LANGFUSE}${t.trace_id}" target="_blank" rel="noopener">trace ↗</a>` : ""}</div>`;
+    if (ti === 0) {
+      const spec = t.system_specific || [];
+      h += row(`t${ti}.sys`, `<details class="block b-sys"><summary><span class="who">System prompt</span> · ${spec.map(l => esc(l.replace(/^\s*-\s*/, ""))).join(" · ") || "standard"} <span class="pill">(rest is the same in every trace)</span></summary><pre>${esc(COMMON_PROMPT).split("\n").map(l => l).join("\n")}</pre>${spec.length ? `<pre class="specific">${spec.map(esc).join("\n")}</pre>` : ""}</details>`);
+    }
+    const [ua, us] = forBlock(`t${ti}.user`);
+    h += row(`t${ti}.user`, `<div class="block b-user" data-sel="t${ti}.user"><div class="who">User</div><div class="txt">${highlight(t.user, ua, us)}</div></div>`, ti ? "" : "");
+    if (!expanded) {
+      h += row(`t${ti}.steps`, `<div class="stepsline" data-expand="1" title="Click or press e to expand">${stepsSummary(t.steps)}${t.steps.length ? ` <span class="pill">· expand <kbd>e</kbd></span>` : ""}</div>`);
+    } else {
+      t.steps.forEach((s, si) => {
+        const b = `t${ti}.s${si}`;
+        const outStr = jsonPretty(s.output);
+        const [sa, ss] = forBlock(b);
+        const inner = `<div class="block b-tool ${s.error ? "err" : ""}" data-sel="${b}"><div class="who">${si + 1}. ${esc(s.tool)}(<span style="font-weight:400">${esc(jsonShort(s.input))}</span>)${s.write ? `<span class="writetag">write</span>` : ""}${s.error ? `<span class="errtag">✗ ${esc(s.error)}</span>` : ""}</div>
+          <details ${s.error || outStr.length < 500 ? "open" : ""}><summary>Result · ${outStr.length.toLocaleString()} chars</summary><pre class="txt">${highlight(outStr, sa, ss)}</pre></details></div>`;
+        h += row(b, inner, "stepsgroup");
+      });
+      if (!t.steps.length) h += row(`t${ti}.steps`, `<div class="stepsline">${stepsSummary(t.steps)}</div>`);
+    }
+    const [aa, as] = forBlock(`t${ti}.answer`);
+    h += row(`t${ti}.answer`, `<div class="block b-asst" data-sel="t${ti}.answer"><div class="who">Assistant answered</div><div class="txt">${highlight(t.answer || "(empty reply)", aa, as)}</div></div>`);
+  });
+  return h;
+}
+
+function scenarioLine(c) {
+  const e = c.expected || {}, x = c.extra || {}, o = x.order;
+  const bits = [];
+  if (o) bits.push(`order ${o.id} · ${o.status}${o.days_since_delivery != null ? ` · ${o.days_since_delivery} days since delivery` : ""} · $${(o.total_cents / 100).toFixed(2)}${c.role === "shopper" && o.user_id != null && String(o.user_id) !== String(c.user_id) ?` · <b style="color:var(--err)">belongs to user ${o.user_id}</b>` : ""}`);
+  if (x.pair_key) { const p = pairOf(c); bits.push(`<b style="color:var(--sugg)">auth pair${p ? ` with ${esc(p.id)}` : ""} (press c)</b> · this order ${x.order_exists ? "exists but belongs to another user" : "does not exist"}${p ? `; in ${esc(p.id)} it ${p.extra.order_exists ? "exists but belongs to another user" : "does not exist"}` : ""}`); }
+  if (x.expected_handling) bits.push(`data-quality case: ${esc(x.expected_handling)}`);
+  if (e.outcome) bits.push(`intended: ${esc(e.outcome.replace(/_/g, " "))}`);
+  return bits.join(" &nbsp;·&nbsp; ");
+}
+function scenarioTable(c) {
+  const rows = [];
+  for (const [k, v] of Object.entries(c.tuple || {})) rows.push([k, v]);
+  if (c.expected) { rows.push(["intended outcome", c.expected.outcome]); rows.push(["why", c.expected.reason]); }
+  for (const [k, v] of Object.entries(c.extra || {})) rows.push([k, typeof v === "object" ? JSON.stringify(v) : v]);
+  return `<table>${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>`;
+}
+
+function renderReview() {
+  const items = batchItems(ui.batch);
+  if (!ui.conv || !BYID[ui.conv]) ui.conv = items.find(id => !isRead(id)) || items[0] || DATA.conversations[0].id;
+  const c = BYID[ui.conv];
+  if (ui.compare) return renderCompare(c);
+  const inBatch = items.includes(c.id);
+  const pos = items.indexOf(c.id);
+  const strip = items.map(id => `<span data-open="${id}" class="${status(id)} ${id === c.id ? "cur" : ""}" title="${id} · ${status(id)}"></span>`).join("");
+  const f = c.features;
+  const errs = c.turns.flatMap(t => t.steps).filter(s => s.error).length;
+  const pend = pendingSugg(c.id).length;
+  const pair = pairOf(c);
+  const h = `
+  <div class="navline"><span>${inBatch ? `<b>${pos + 1}</b> of ${items.length} in “${esc(manifest.batches.find(b => b.name === ui.batch).title)}”` : `<b>Browsing</b>: not in the “${esc((manifest.batches.find(b => b.name === ui.batch) || {}).title || "")}” batch${batchOf(c.id) ? "" : " (not in any batch)"}`}</span>
+    <span><kbd>k</kbd> previous · <kbd>j</kbd> next</span>
+    <span class="legendmini"><i style="background:var(--line)"></i>not read <i style="background:var(--note)"></i>failure noted <i style="background:var(--fine)"></i>looks fine</span>${!batchOf(c.id) ? ` <select id="addcur"><option value="">Add to batch…</option>${manifest.batches.map(b => `<option value="${b.name}">${esc(b.title)}</option>`).join("")}</select>` : ""}</div>
+  <div id="strip">${strip}</div>
+  <div class="hdr">
+    <div class="title"><b>${esc(c.id)}</b>
+      <span class="chip">${esc(c.role)}</span><span class="chip">${esc(c.group || "")}</span>
+      ${c.dq_case ? `<span class="chip">data-quality ${esc(c.dq_case)}</span>` : ""}
+      <span class="chip">${f.turns} turn${f.turns > 1 ? "s" : ""}</span><span class="chip">${f.tool_calls} tool call${f.tool_calls === 1 ? "" : "s"}</span>
+      ${errs ? `<span class="chip errc">${errs} tool error${errs > 1 ? "s" : ""}</span>` : ""}
+      ${(c.flags || []).map(x => `<span class="chip flag">${esc(x)}</span>`).join("")}
+      <span class="chip" title="model">${esc((c.model || "").replace("anthropic/", ""))}</span>
+      ${pend ? `<span class="chip sugg">${pend} AI suggestion${pend > 1 ? "s" : ""}${isRead(c.id) ? "" : " · shown after you judge"}</span>` : ""}
+    </div>
+    <div class="scn"><div class="line" id="scntoggle" title="Show all scenario notes"><b>Scenario notes</b> ${ui.showScn ? "▾" : "▸"} &nbsp;${scenarioLine(c) || "<i>none</i>"}</div>${ui.showScn ? scenarioTable(c) : ""}</div>
+    <div class="actions">
+      <button data-add="conv">Note on conversation <kbd>n</kbd></button>
+      <button id="finebtn" ${status(c.id) === "noted" ? "disabled" : ""}>${status(c.id) === "fine" ? "✓ Marked fine" : "Looks fine"} <kbd>f</kbd></button>
+      <button data-expand="1">${ui.expanded ? "Collapse" : "Expand"} steps <kbd>e</kbd></button>
+      <button id="cmpbtn">Compare${pair ? " with " + esc(pair.id) : "…"} <kbd>c</kbd></button>
+      <a href="${LANGFUSE}${c.trace_ids[0]}" target="_blank" rel="noopener">Open in Langfuse ↗</a>
+    </div>
+  </div>
+  <div class="row" data-block="conv"><div></div><div class="margin">${marginFor(c.id, "conv", isRead(c.id))}</div></div>
+  ${convBody(c)}
+  <div id="help"><kbd>j</kbd>/<kbd>k</kbd> next/previous · <kbd>n</kbd> note (select text first to attach it) · <kbd>f</kbd> looks fine · <kbd>e</kbd> expand steps · <kbd>c</kbd> compare · <kbd>/</kbd> search · <kbd>u</kbd> undo · <kbd>s</kbd> scenario notes</div>`;
+  $("#main").innerHTML = h;
+  const nb = $("#notebox");
+  if (nb) { nb.focus(); nb.setSelectionRange(nb.value.length, nb.value.length); wireEditor(nb); }
+}
+
+function pairOf(c) {
+  const k = c.extra && c.extra.pair_key;
+  if (!k) return null;
+  return DATA.conversations.find(o => o.id !== c.id && o.extra && o.extra.pair_key === k) || null;
+}
+function renderCompare(c) {
+  const o = BYID[ui.compare];
+  $("#main").innerHTML = `<div class="navline"><button id="cmpclose">← Back to ${esc(c.id)} <kbd>Esc</kbd></button><span>Side by side, all steps expanded. Read-only.</span></div>
+    <div class="cmp">${[c, o].map(x => `<div class="col"><h3>${esc(x.id)} <span class="chip">${esc(x.role)}</span></h3><div class="scn" style="margin-bottom:8px">${scenarioLine(x)}</div>${convBody(x, { readonly: true })}</div>`).join("")}</div>`;
+}
+
+/* ---------- editor wiring ---------- */
+function priorNotes() {
+  const seen = new Map();
+  for (const a of annotations) if (a.kind === "note" && a.source === "human" && a.note) seen.set(a.note.trim(), (seen.get(a.note.trim()) || 0) + 1);
+  return [...seen.entries()].sort((a, b) => b[1] - a[1]).map(e => e[0]);
+}
+function wireEditor(nb) {
+  const list = $("#prevnotes");
+  let hi = -1, matches = [];
+  const refresh = () => {
+    const q = nb.value.trim().toLowerCase();
+    matches = q.length < 3 ? [] : priorNotes().filter(n => n.toLowerCase().includes(q) && n.toLowerCase() !== q).slice(0, 6);
+    hi = -1;
+    list.style.display = matches.length ? "block" : "none";
+    list.innerHTML = matches.map((m, i) => `<div data-i="${i}">${esc(m)}</div>`).join("");
+  };
+  const pick = i => { nb.value = matches[i]; list.style.display = "none"; matches = []; nb.focus(); };
+  nb.addEventListener("input", refresh);
+  list.addEventListener("mousedown", e => { const d = e.target.closest("[data-i]"); if (d) { e.preventDefault(); pick(+d.dataset.i); } });
+  nb.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown" && matches.length) { e.preventDefault(); hi = (hi + 1) % matches.length; }
+    else if (e.key === "ArrowUp" && matches.length) { e.preventDefault(); hi = (hi - 1 + matches.length) % matches.length; }
+    else if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (hi >= 0 && matches.length) { pick(hi); return; }
+      saveEditor(nb.value.trim()); return;
+    } else if (e.key === "Escape") { e.preventDefault(); ui.editor = null; render(); return; }
+    else return;
+    [...list.children].forEach((d, i) => d.classList.toggle("on", i === hi));
+  });
+}
+function saveEditor(text) {
+  const e = ui.editor; if (!e) return;
+  if (!text) { ui.editor = null; render(); return; }
+  if (e.editId) { pushUndo(); const a = annotations.find(x => x.id === e.editId); if (a) { a.note = text; a.updated = now(); } saveAnnotations(); ui.editor = null; render(); toast("Note updated"); return; }
+  addNote(ui.conv, e.block, e.quote, text);
+  ui.editor = null; ui.sel = null;
+  const hasSugg = pendingSugg(ui.conv).length > 0;
+  if (hasSugg) { render(); toast("Saved. AI suggestions are now visible: accept or reject, then j"); }
+  else { toast("Saved · moving to the next unread"); setTimeout(nextUnread, 350); render(); }
+}
+function openEditor(block, quote) {
+  if (ui.view !== "review" || ui.compare) return;
+  ui.editor = { block, quote: quote || "" };
+  $("#floatbtn").style.display = "none";
+  render();
+}
+
+/* ---------- rendering: labels ---------- */
+function renderLabels() {
+  const modes = labelModes();
+  const rows = reviewedIds().sort();
+  if (!modes.length) { $("#main").innerHTML = `<div class="empty">No failure types yet. Once your taxonomy is drafted (patterns.json), each type becomes a column here for present/absent labeling.</div>`; return; }
+  if (!rows.length) { $("#main").innerHTML = `<div class="empty">No reviewed conversations yet.</div>`; return; }
+  ui.labelRow = Math.min(ui.labelRow, rows.length - 1);
+  let blanks = 0;
+  const counts = modes.map(m => { let p = 0, a = 0; for (const r of rows) { const l = labels[r]?.[m.name]?.label; if (l === 1) p++; else if (l === 0) a++; else blanks++; } return { p, a }; });
+  const head = `<tr><th>Conversation</th>${modes.map((m, i) => `<th title="${esc(m.definition || "")}"><span class="k">${i + 1}</span> ${esc(m.name)}<br><span class="k">${counts[i].p} present · ${counts[i].a} absent</span></th>`).join("")}<th>Your notes</th></tr>`;
+  const body = rows.map((r, ri) => `<tr class="${ri === ui.labelRow ? "on" : ""}" data-row="${ri}"><td class="id" data-open="${r}">${esc(r)}</td>${modes.map(m => {
+      const l = labels[r]?.[m.name];
+      const v = l?.label;
+      const sync = l && v != null && l.langfuse !== "written" ? `<span class="sync" title="Langfuse: ${esc(l.langfuse)}">●</span>` : "";
+      const pr = proposed[r]?.[m.name];
+      const blank = pr == null ? "·" : `<span class="prop" title="proposed from your notes — press y to accept the row">${pr === 1 ? "present?" : "absent?"}</span>`;
+      return `<td class="cell ${v === 1 ? "p" : v === 0 ? "a" : "b"}" data-conv="${r}" data-mode="${esc(m.name)}">${v === 1 ? "present" : v === 0 ? "absent" : blank}${sync}</td>`;
+    }).join("")}<td class="notes">${humanAnns(r).map(a => `<div>${esc(a.note)}</div>`).join("")}</td></tr>`).join("");
+  $("#main").innerHTML = `<div class="card"><b>${blanks}</b> of ${rows.length * modes.length} cells left. Click a cell to cycle blank → present → absent. Keys: <kbd>j</kbd>/<kbd>k</kbd> row · <kbd>y</kbd> accept this row's proposals · <kbd>1</kbd>–<kbd>${modes.length}</kbd> toggle that column · <kbd>a</kbd> set this row's blanks to absent · <kbd>Enter</kbd> open conversation. Grey "present?/absent?" are proposals drawn from your notes — nothing is saved until you accept or click. Blank is never counted as absent. ${langfuseOn ? "Each change is written to Langfuse as a score." : "<b>Langfuse is not configured</b>; labels are saved locally only."}</div>
+    <table class="lg">${head}${body}</table>`;
+}
+async function setLabel(convId, mode, label) {
+  const c = BYID[convId];
+  labels[convId] = labels[convId] || {};
+  labels[convId][mode] = { label, langfuse: "pending" };
+  render();
+  setSaved("saving");
+  try {
+    const r = await api("/api/labels", { conv_id: convId, mode, label, trace_ids: c.trace_ids });
+    labels[convId][mode] = { label, langfuse: r.langfuse, ts: r.ts };
+    setSaved("ok");
+    if (r.langfuse && r.langfuse.startsWith("error")) toast("Saved locally; Langfuse error: " + r.langfuse);
+  } catch (e) { setSaved("bad"); toast("Label not saved: " + e.message); }
+  render();
+}
+function cycleLabel(convId, mode) {
+  const v = labels[convId]?.[mode]?.label;
+  setLabel(convId, mode, v == null ? 1 : v === 1 ? 0 : 1);
+}
+
+/* ---------- rendering: taxonomy ---------- */
+function renderTaxonomy() {
+  const modes = modesList();
+  const annById = Object.fromEntries(annotations.map(a => [a.id, a]));
+  const used = new Set(modes.flatMap(m => m.annotation_ids || []));
+  const notes = annotations.filter(a => a.kind === "note");
+  const un = notes.filter(a => !used.has(a.id));
+  const maxN = Math.max(1, ...modes.map(m => (m.annotation_ids || []).length));
+  const li = a => `<li data-openann="${a.id}"><b>${esc(a.conv_id)}</b>: ${esc(a.note)}</li>`;
+  const cards = modes.map(m => {
+    const n = (m.annotation_ids || []).length;
+    const pos = Object.values(labels).filter(l => l[m.name]?.label === 1).length;
+    return `<div class="mode" style="flex: ${1 + 3 * n / maxN} 1 ${260 + 140 * n / maxN}px">
+      <h3>${esc(m.name)}</h3><div class="def">${esc(m.definition || "")}</div>
+      <div class="meta">${n} supporting note${n === 1 ? "" : "s"} · ${pos} labeled present${m.evaluator ? ` · evaluator: ${esc(m.evaluator)}` : ""}${m.requirement_source ? ` · source: ${esc(m.requirement_source)}` : ""}${m.status ? ` · ${esc(m.status)}` : ""}</div>
+      ${m.boundary ? `<div class="meta"><b>Boundary:</b> ${esc(m.boundary)}</div>` : ""}
+      <ul>${(m.annotation_ids || []).map(id => annById[id]).filter(Boolean).map(li).join("")}</ul></div>`;
+  }).join("");
+  $("#main").innerHTML = `<div class="card">Failure types are drafted from your notes (axial coding) and saved in <code>analysis/state/patterns.json</code>. Block size follows the number of supporting notes. Counts are for you, not a priority list.</div>
+    <div class="tx">${cards || `<div class="empty">No failure types yet: write notes first, then we group them together.</div>`}
+    <div class="mode un" style="flex: 1 1 260px"><h3>Not yet grouped (${un.length})</h3><ul>${un.map(li).join("") || "<li>none</li>"}</ul></div></div>`;
+}
+
+/* ---------- rendering: progress ---------- */
+function renderProgress() {
+  const modes = modesList();
+  const rowsHtml = manifest.batches.map((b, bi) => {
+    const ids = b.items.map(i => i.conv_id);
+    const read = ids.filter(isRead).length, noted = ids.filter(id => status(id) === "noted").length, fine = ids.filter(id => status(id) === "fine").length;
+    const nm = modes.filter(m => modeFirstBatch(m) === bi).length;
+    return `<tr><td><b>${esc(b.title)}</b><br><span class="pill">${esc(b.strategy || "")}</span></td><td>${read}/${ids.length}</td><td><div class="bar"><i style="width:${ids.length ? 100 * read / ids.length : 0}%"></i></div></td><td>${noted} with a failure · ${fine} fine</td><td>${modes.length ? nm : "–"}</td></tr>`;
+  }).join("");
+  const unread = manifest.batches.flatMap(b => b.items.filter(i => !isRead(i.conv_id)).map(i => i.conv_id));
+  const rv = reviewedIds();
+  const blanks = labelModes().map(m => ({ m: m.name, n: rv.filter(r => labels[r]?.[m.name]?.label == null).length }));
+  const pend = suggestions.filter(s => (s.status || "pending") === "pending");
+  const decided = suggestions.filter(s => s.status === "accepted" || s.status === "rejected");
+  const sq = pend.map(s => {
+    const read = isRead(s.conv_id);
+    return `<div class="srow"><input type="checkbox" class="sck" value="${s.id}" ${read ? "" : "disabled title='Read the conversation first'"}><span><b>${esc(s.mode)}</b></span><span class="linklist"><span data-open="${s.conv_id}">${esc(s.conv_id)}</span></span><span class="qt" data-open="${s.conv_id}">${read ? `${s.quote ? `“${esc(s.quote.slice(0, 140))}” ` : ""}<span class="pill">${esc(s.reason || "")}</span>` : `<i class="pill">Hidden until you read this conversation (avoids anchoring)</i>`}</span></div>`;
+  }).join("");
+  $("#main").innerHTML = `
+  <div class="card"><h2>Batches · ${rv.length}/100 distinct conversations reviewed</h2>
+    <table class="pt"><tr><th>Batch</th><th>Read</th><th></th><th>Outcome</th><th>New failure types</th></tr>${rowsHtml}</table>
+    <p class="pill">“New failure types” counts types whose earliest supporting note is from that batch. Near zero in the final random batch suggests saturation.</p></div>
+  <div class="card"><h2>Still to read (${unread.length})</h2><div class="linklist">${unread.map(id => `<span data-open="${id}">${id}</span>`).join("") || "All read."}</div></div>
+  <div class="card"><h2>Incomplete labels</h2>${modes.length ? blanks.map(b => `<div>${esc(b.m)}: <b>${b.n}</b> blank of ${rv.length}</div>`).join("") : `<span class="pill">No failure types yet.</span>`}</div>
+  <div class="card sq"><h2>AI suggestions to review (${pend.length} pending · ${decided.filter(s => s.status === "accepted").length} accepted · ${decided.filter(s => s.status === "rejected").length} rejected)</h2>
+    ${pend.length ? `<div class="actions" style="margin:0 0 6px"><label><input type="checkbox" id="sckall"> Select all readable</label><button id="accsel" class="primary">Accept selected</button><button id="rejsel">Reject selected</button></div>${sq}` : `<span class="pill">None pending. Suggestions appear here when the agent runs a depth search.</span>`}</div>`;
+}
+
+/* ---------- rendering: map ---------- */
+let mapPts = [];
+function hull(pts) {
+  const p = [...pts].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  if (p.length < 3) return p;
+  const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  const lo = [], up = [];
+  for (const q of p) { while (lo.length >= 2 && cross(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
+  for (const q of p.reverse()) { while (up.length >= 2 && cross(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
+  return lo.slice(0, -1).concat(up.slice(0, -1));
+}
+function renderMap() {
+  $("#main").innerHTML = `<div class="legend"><span>Color = cluster (turns, tool calls, tool errors, writes, reply length, role)</span><span>● large with dark ring = in a batch</span><span style="color:#e67e22">● orange = reviewed</span><span>Click a dot to open it.</span></div><div id="mapwrap"><canvas id="map"></canvas><div id="tip"></div></div>`;
+  const cv = $("#map"), wrap = $("#mapwrap");
+  const dpr = window.devicePixelRatio || 1, W = wrap.clientWidth, H = 600;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const g = cv.getContext("2d"); g.scale(dpr, dpr);
+  const cs = DATA.conversations, xs = cs.map(c => c.xy[0]), ys = cs.map(c => c.xy[1]);
+  const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+  const P = 30, sx = x => P + (x - x0) / (x1 - x0 || 1) * (W - 2 * P), sy = y => H - P - (y - y0) / (y1 - y0 || 1) * (H - 2 * P);
+  const jit = id => { let h = 0; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) | 0; return [((h & 255) / 255 - .5) * 10, (((h >> 8) & 255) / 255 - .5) * 10]; };
+  mapPts = cs.map(c => { const j = jit(c.id); return { c, x: sx(c.xy[0]) + j[0], y: sy(c.xy[1]) + j[1] }; });
+  const byC = {};
+  for (const p of mapPts) (byC[p.c.cluster] = byC[p.c.cluster] || []).push([p.x, p.y]);
+  for (const [k, pts] of Object.entries(byC)) {
+    const hl = hull(pts); if (hl.length < 3) continue;
+    g.beginPath(); hl.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath();
+    g.fillStyle = CLUSTER_COLORS[k % 8] + "18"; g.fill(); g.strokeStyle = CLUSTER_COLORS[k % 8] + "55"; g.stroke();
+  }
+  const ink = getComputedStyle(document.documentElement).getPropertyValue("--ink");
+  for (const p of mapPts) {
+    const inB = !!batchOf(p.c.id), rd = isRead(p.c.id);
+    g.beginPath(); g.arc(p.x, p.y, inB ? 6 : 3.5, 0, 7);
+    g.fillStyle = rd ? "#e67e22" : CLUSTER_COLORS[p.c.cluster % 8]; g.fill();
+    if (inB) { g.lineWidth = 2; g.strokeStyle = ink; g.stroke(); }
+  }
+  const tip = $("#tip");
+  const hit = e => { const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top; let best = null, bd = 100; for (const p of mapPts) { const d = (p.x - mx) ** 2 + (p.y - my) ** 2; if (d < bd) { bd = d; best = p; } } return best; };
+  cv.onmousemove = e => { const p = hit(e); if (!p) { tip.style.display = "none"; cv.style.cursor = ""; return; }
+    const c = p.c; tip.style.display = "block"; tip.style.left = Math.min(p.x + 12, W - 330) + "px"; tip.style.top = (p.y + 12) + "px"; cv.style.cursor = "pointer";
+    tip.innerHTML = `<b>${esc(c.id)}</b> · ${esc(c.role)} · cluster ${c.cluster}<br>${c.features.turns} turn(s), ${c.features.tool_calls} tool calls${c.features.tool_errors ? `, ${c.features.tool_errors} errors` : ""}<br>${batchOf(c.id) ? "in " + batchOf(c.id) : "not sampled"} · ${status(c.id)} · ${humanAnns(c.id).length} notes<br><i>${esc(c.turns[0].user.slice(0, 90))}</i>`; };
+  cv.onmouseleave = () => tip.style.display = "none";
+  cv.onclick = e => { const p = hit(e); if (p) openConv(p.c.id); };
+}
+
+/* ---------- search ---------- */
+function openSearch() {
+  $("#overlay").style.display = "flex";
+  $("#addto").innerHTML = `<option value="">Add to batch…</option>` + manifest.batches.map(b => `<option value="${b.name}">${esc(b.title)}</option>`).join("");
+  const q = $("#q"); q.focus(); q.select(); runSearch();
+}
+function closeSearch() { $("#overlay").style.display = "none"; }
+let searchHits = [], searchHi = 0;
+function runSearch() {
+  const terms = $("#q").value.toLowerCase().split(/\s+/).filter(Boolean);
+  const free = $("#onlyfree").checked;
+  searchHits = DATA.conversations.filter(c => {
+    if (free && batchOf(c.id)) return false;
+    return terms.every(t => {
+      if (t === "error") return c.features.tool_errors > 0;
+      if (t === "write") return c.features.write_calls > 0;
+      if (t === "multi") return c.features.turns > 1;
+      if (t === "noted" || t === "fine" || t === "unread") return status(c.id) === t;
+      return c._hay.includes(t);
+    });
+  }).slice(0, 200);
+  searchHi = 0;
+  $("#results").innerHTML = searchHits.map((c, i) => `<div class="r ${i === 0 ? "on" : ""}" data-open="${c.id}"><b>${esc(c.id)}</b><span class="u">${esc(c.role)} · ${esc(c.turns[0].user)}</span><span class="pill">${batchOf(c.id) ? esc(batchOf(c.id)) : "–"} · ${status(c.id)}</span></div>`).join("") || `<div class="empty">No matches</div>`;
+}
+async function addToBatch(name, ids) {
+  const b = manifest.batches.find(x => x.name === name);
+  let added = 0;
+  for (const id of ids) {
+    if (batchOf(id)) continue;
+    const c = BYID[id];
+    b.items.push({ conv_id: id, trace_ids: c.trace_ids, reason: "added from search: " + ($("#q").value || "manual") });
+    added++;
+  }
+  await saveManifest();
+  toast(`${added} added to “${b.title}”${ids.length - added ? ` (${ids.length - added} already in a batch)` : ""}`);
+  render();
+}
+
+/* ---------- main render ---------- */
+function render() {
+  renderTop();
+  ({ review: renderReview, labels: renderLabels, taxonomy: renderTaxonomy, progress: renderProgress, map: renderMap })[ui.view]();
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click", e => {
+  const t = e.target;
+  const v = t.closest("[data-view]"); if (v) { ui.view = v.dataset.view; ui.compare = null; remember(); render(); return; }
+  const op = t.closest("[data-open]"); if (op) { closeSearch(); openConv(op.dataset.open); return; }
+  const oa = t.closest("[data-openann]"); if (oa) { const a = annotations.find(x => x.id === oa.dataset.openann); if (a) openConv(a.conv_id); return; }
+  const ad = t.closest("[data-add]"); if (ad) { const blk = ad.dataset.add; const q = ui.sel && ui.sel.block === blk ? ui.sel.quote : ""; openEditor(blk, q); return; }
+  const ex = t.closest("[data-expand]"); if (ex) { ui.expanded = !ui.expanded; remember(); render(); return; }
+  const dl = t.closest("[data-del]"); if (dl) { deleteNote(dl.dataset.del); return; }
+  const ed = t.closest("[data-edit]"); if (ed) { editNote(ed.dataset.edit); return; }
+  const ac = t.closest("[data-acc]"); if (ac) { decideSuggestions([ac.dataset.acc], "accepted"); return; }
+  const rj = t.closest("[data-rej]"); if (rj) { decideSuggestions([rj.dataset.rej], "rejected"); return; }
+  const cell = t.closest("td.cell"); if (cell) { cycleLabel(cell.dataset.conv, cell.dataset.mode); return; }
+  const tr = t.closest("tr[data-row]"); if (tr) { ui.labelRow = +tr.dataset.row; render(); return; }
+  if (t.id === "finebtn") { if (markFine(ui.conv)) setTimeout(nextUnread, 250); return; }
+  if (t.closest("#cmpbtn")) { startCompare(); return; }
+  if (t.closest("#cmpclose")) { ui.compare = null; render(); return; }
+  if (t.closest("#scntoggle")) { ui.showScn = !ui.showScn; render(); return; }
+  if (t.closest("#searchbtn")) { openSearch(); return; }
+  if (t.id === "floatbtn") { openEditor(ui.sel.block, ui.sel.quote); return; }
+  if (t.id === "overlay") { closeSearch(); return; }
+  if (t.id === "sckall") { document.querySelectorAll(".sck:not(:disabled)").forEach(x => x.checked = t.checked); return; }
+  if (t.id === "accsel" || t.id === "rejsel") { const ids = [...document.querySelectorAll(".sck:checked")].map(x => x.value); if (!ids.length) { toast("Select at least one"); return; } decideSuggestions(ids, t.id === "accsel" ? "accepted" : "rejected"); return; }
+  if (ui.editor && !t.closest(".editor")) { ui.editor = null; render(); }
+});
+document.addEventListener("change", e => {
+  if (e.target.id === "batchsel") { ui.batch = e.target.value; const items = batchItems(ui.batch); ui.conv = items.find(id => !isRead(id)) || items[0] || ui.conv; ui.compare = null; remember(); render(); }
+  if (e.target.id === "addcur" && e.target.value) addToBatch(e.target.value, [ui.conv]);
+  if (e.target.id === "addto" && e.target.value) { addToBatch(e.target.value, searchHits.map(c => c.id).slice(0, 1)); e.target.value = ""; }
+  if (e.target.id === "onlyfree") runSearch();
+});
+$("#q").addEventListener("input", runSearch);
+$("#q").addEventListener("keydown", e => {
+  if (e.key === "Escape") { closeSearch(); return; }
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); searchHi = Math.max(0, Math.min(searchHits.length - 1, searchHi + (e.key === "ArrowDown" ? 1 : -1))); [...$("#results").children].forEach((d, i) => d.classList.toggle("on", i === searchHi)); $("#results").children[searchHi]?.scrollIntoView({ block: "nearest" }); }
+  if (e.key === "Enter" && searchHits[searchHi]) { closeSearch(); openConv(searchHits[searchHi].id); }
+});
+// hover linking between highlights and margin notes
+document.addEventListener("mouseover", e => {
+  const l = e.target.closest("[data-link]");
+  document.querySelectorAll(".hot").forEach(x => x.classList.remove("hot"));
+  if (l) document.querySelectorAll(`[data-link="${l.dataset.link}"]`).forEach(x => x.classList.add("hot"));
+});
+// text selection → pending quote + floating button
+document.addEventListener("mouseup", e => {
+  if (ui.view !== "review" || ui.compare || e.target.closest(".editor") || e.target.id === "floatbtn") return;
+  setTimeout(() => {
+    const s = window.getSelection(); const txt = s ? s.toString().trim() : "";
+    const fb = $("#floatbtn");
+    if (!txt) { fb.style.display = "none"; ui.sel = null; return; }
+    const a = s.anchorNode && s.anchorNode.parentElement && s.anchorNode.parentElement.closest("[data-sel]");
+    const f = s.focusNode && s.focusNode.parentElement && s.focusNode.parentElement.closest("[data-sel]");
+    if (!a || a !== f) { fb.style.display = "none"; ui.sel = null; toast("Select text inside one message or tool result"); return; }
+    ui.sel = { block: a.dataset.sel, quote: txt.slice(0, 500) };
+    const r = s.getRangeAt(0).getBoundingClientRect();
+    fb.style.left = (r.right + window.scrollX + 6) + "px"; fb.style.top = (r.top + window.scrollY - 4) + "px"; fb.style.display = "block";
+    try { const span = document.createElement("span"); span.className = "pending"; s.getRangeAt(0).surroundContents(span); s.removeAllRanges(); } catch (err) {}
+  }, 0);
+});
+function startCompare() {
+  const c = BYID[ui.conv]; const p = pairOf(c);
+  if (p) { ui.compare = p.id; render(); return; }
+  const other = prompt("Compare with which conversation id? (e.g. support-0207)");
+  if (other && BYID[other.trim()]) { ui.compare = other.trim(); render(); } else if (other) toast("No conversation " + other);
+}
+document.addEventListener("keydown", e => {
+  if ((e.target.closest && e.target.closest("input, textarea, select")) || e.ctrlKey || e.metaKey || e.altKey) return;
+  if ($("#overlay").style.display === "flex") return;
+  const k = e.key;
+  if (k === "/") { e.preventDefault(); openSearch(); return; }
+  if (k === "u") { undo(); return; }
+  if (k === "Escape") { if (ui.compare) { ui.compare = null; render(); } else if (ui.editor) { ui.editor = null; render(); } return; }
+  if (ui.view === "labels") {
+    const modes = labelModes(), rows = reviewedIds().sort();
+    if (k === "j" || k === "ArrowDown") { ui.labelRow = Math.min(rows.length - 1, ui.labelRow + 1); remember(); render(); document.querySelector("tr.on")?.scrollIntoView({ block: "nearest" }); }
+    else if (k === "k" || k === "ArrowUp") { ui.labelRow = Math.max(0, ui.labelRow - 1); remember(); render(); document.querySelector("tr.on")?.scrollIntoView({ block: "nearest" }); }
+    else if (/^[1-9]$/.test(k) && modes[+k - 1] && rows[ui.labelRow]) cycleLabel(rows[ui.labelRow], modes[+k - 1].name);
+    else if (k === "a" && rows[ui.labelRow]) { const r = rows[ui.labelRow]; modes.filter(m => labels[r]?.[m.name]?.label == null).forEach(m => setLabel(r, m.name, 0)); }
+    else if (k === "y" && rows[ui.labelRow]) {
+      const r = rows[ui.labelRow];
+      const todo = modes.filter(m => labels[r]?.[m.name]?.label == null && proposed[r]?.[m.name] != null);
+      if (!todo.length) { toast("Nothing proposed left in this row"); return; }
+      todo.forEach(m => setLabel(r, m.name, proposed[r][m.name]));
+      ui.labelRow = Math.min(rows.length - 1, ui.labelRow + 1); remember();
+    }
+    else if (k === "Enter" && rows[ui.labelRow]) openConv(rows[ui.labelRow]);
+    return;
+  }
+  if (ui.view !== "review") return;
+  if (k === "j") stepConv(1);
+  else if (k === "k") stepConv(-1);
+  else if (k === "n") { e.preventDefault(); openEditor(ui.sel ? ui.sel.block : "conv", ui.sel ? ui.sel.quote : ""); }
+  else if (k === "f") { if (markFine(ui.conv)) setTimeout(nextUnread, 250); }
+  else if (k === "e") { ui.expanded = !ui.expanded; remember(); render(); }
+  else if (k === "c") startCompare();
+  else if (k === "s") { ui.showScn = !ui.showScn; render(); }
+});
+
+/* ---------- polling for agent updates ---------- */
+async function poll() {
+  try {
+    const [m, p, s] = await Promise.all([api("/api/manifest"), api("/api/patterns"), api("/api/suggestions")]);
+    let msg = [];
+    const newPend = (Array.isArray(s) ? s : []).filter(x => (x.status || "pending") === "pending" && !suggestions.some(y => y.id === x.id)).length;
+    if (JSON.stringify(m) !== JSON.stringify(manifest)) { const before = manifest.batches.reduce((n, b) => n + b.items.length, 0); manifest = m; const after = manifest.batches.reduce((n, b) => n + b.items.length, 0); if (after > before) msg.push(`${after - before} conversations added to batches`); }
+    if (JSON.stringify(p) !== JSON.stringify(patterns)) { patterns = p; msg.push("taxonomy updated"); }
+    if (Array.isArray(s)) mergeSuggestions(s);
+    if (newPend) msg.push(`${newPend} new AI suggestion${newPend > 1 ? "s" : ""}`);
+    if (msg.length) { toast(msg.join(" · ")); if (!ui.editor) render(); }
+  } catch (e) {}
+}
+
+/* ---------- boot ---------- */
+(async function boot() {
+  try {
+    const d = await api("/api/conversations");
+    DATA = d; COMMON_PROMPT = d.system_prompt_common || "";
+    for (const c of DATA.conversations) {
+      BYID[c.id] = c;
+      c._hay = [c.id, c.role, c.group, JSON.stringify(c.tuple || {}), ...c.turns.flatMap(t => [t.user, t.answer, ...t.steps.map(s => s.tool)])].join(" ").toLowerCase();
+    }
+    const [m, a, p, s, l, pr] = await Promise.all([api("/api/manifest"), api("/api/annotations"), api("/api/patterns"), api("/api/suggestions"), api("/api/labels"), api("/api/proposed").catch(() => ({}))]);
+    proposed = pr || {};
+    manifest = m; annotations = Array.isArray(a) ? a : (a.annotations || []); patterns = p; suggestions = Array.isArray(s) ? s : []; labels = l.labels || {}; langfuseOn = l.langfuse;
+    const backup = load("annotations_backup", null);
+    // restore the browser copy only when the last save to the server failed
+    if (load("unsynced", false) && backup && JSON.stringify(backup) !== JSON.stringify(annotations)) { annotations = backup; saveAnnotations(); toast("Restored unsaved notes from this browser"); }
+    Object.assign(ui, load("ui", {}));
+    ui.editor = null; ui.compare = null;
+    if (!manifest.batches.some(b => b.name === ui.batch)) ui.batch = manifest.batches[0]?.name;
+    setSaved("ok");
+    render();
+    setInterval(poll, 4000);
+  } catch (e) {
+    $("#main").innerHTML = `<div class="empty">Could not load data: ${esc(e.message)}</div>`;
+    setSaved("bad");
+  }
+})();
+</script>
+</body>
+</html>

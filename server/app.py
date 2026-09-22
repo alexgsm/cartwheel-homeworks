@@ -41,7 +41,12 @@ from agent import db
 from agent.agent import build_agent, prompt_version
 from agent.auth import ROLES, AuthContext
 from agent.config import REPO_ROOT, db_path
-from observability.instrument import load_env, setup_tracing
+from observability.instrument import (
+    load_env,
+    setup_tracing,
+    setup_workshop,
+    workshop_tool_calls,
+)
 
 MAX_TURNS = 12  # cap runaway loops; keeps conversations bounded
 SESSIONS_DB = REPO_ROOT / ".sessions.db"
@@ -53,6 +58,7 @@ _tracer = trace.get_tracer("cartwheel.server")
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     load_env()
     setup_tracing()  # no-op with a warning if LANGFUSE_PUBLIC_KEY is unset
+    setup_workshop()  # no-op unless RAINDROP_LOCAL_DEBUGGER is set (HW4 Part C)
     yield
 
 
@@ -203,10 +209,37 @@ async def post_message(
                     ),
                 )
 
-        result = await Runner.run(
-            agent, body.message, session=session, context=ctx, max_turns=MAX_TURNS
-        )
+        workshop = setup_workshop()
+        interaction = None
+        if workshop is not None:
+            interaction = workshop.begin(
+                user_id=f"{ctx.role}-{ctx.user_id}",
+                event="cartwheel_support",
+                input=body.message,
+                convo_id=session_id,
+                model=body.model,
+                properties={
+                    "role": ctx.role,
+                    "scenario_id": body.scenario_id or "",
+                    "prompt_version": version,
+                    "store_id": "" if ctx.store_id is None else str(ctx.store_id),
+                },
+            )
+        try:
+            result = await Runner.run(
+                agent, body.message, session=session, context=ctx, max_turns=MAX_TURNS
+            )
+        except Exception as exc:
+            if interaction is not None:
+                interaction.finish(output=f"Error: {exc}")
+            raise
         reply = str(result.final_output)
+        if interaction is not None:
+            for call in workshop_tool_calls(result.new_items):
+                interaction.track_tool(
+                    name=call["name"], input=call["input"], output=call["output"]
+                )
+            interaction.finish(output=reply)
 
         if span.is_recording() and capture:
             span.set_attribute(

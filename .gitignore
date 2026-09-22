@@ -22,3 +22,6 @@ scenarios/demo_pilot_gt.json
 # SQLite journal/WAL sidecars for the local session store
 .sessions.db-shm
 .sessions.db-wal
+
+# review app derived data (rebuild with analysis/review_app/build_data.py)
+analysis/review_app/data/

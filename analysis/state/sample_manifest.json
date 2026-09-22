@@ -1,0 +1,741 @@
+{
+  "created": "2026-09-19T12:17:23+00:00",
+  "source": "traces\\support_traces.json",
+  "batches": [
+    {
+      "name": "batch1",
+      "title": "Random + cluster",
+      "strategy": "15 uniform random + 15 cluster representatives",
+      "items": [
+        {
+          "conv_id": "support-0163",
+          "trace_ids": [
+            "1d41a74ce5329a878a0fd3fc86cb5c92"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0026",
+          "trace_ids": [
+            "82fab81b7f077a6747cbb0900fb999e7"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0207",
+          "trace_ids": [
+            "17fd81b827ad6fbb8650121f3bf44592"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0090",
+          "trace_ids": [
+            "0c92951f75d731f7bc7bf9a4a0bc4441"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0036",
+          "trace_ids": [
+            "ce2ce001b31911886a9461f82aeb7707"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0202",
+          "trace_ids": [
+            "adf98d6658b5b901b8dc4eb35bcf8bfb"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0168",
+          "trace_ids": [
+            "cca374339d761cd0d4ea558d2aba600c"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0192",
+          "trace_ids": [
+            "8cdb3a67427a8552373999743ce551ff"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0209",
+          "trace_ids": [
+            "bc85f0472468e83088130c068a9e9996"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0197",
+          "trace_ids": [
+            "d7cd03c8a4277e30f6f1529ca2ddfd34"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0087",
+          "trace_ids": [
+            "0b684deae48f44c3e6eab2fa4df6c3a1"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0103",
+          "trace_ids": [
+            "c35aea8d584e45636352ef7fe2c2817f"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0185",
+          "trace_ids": [
+            "289f88ee490e3f352857c78654a7892b"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0144",
+          "trace_ids": [
+            "1ae3d432a811dbe38ad185f657568de6"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0072",
+          "trace_ids": [
+            "1bfc823ff0138bc4bff934d6f40aaea6"
+          ],
+          "reason": "uniform random"
+        },
+        {
+          "conv_id": "support-0179",
+          "trace_ids": [
+            "a502df019493f2e9c47b3d331d64d0cd"
+          ],
+          "reason": "cluster 0 representative"
+        },
+        {
+          "conv_id": "support-0112",
+          "trace_ids": [
+            "ed4c59498948af38b3c1e07a76a33dba"
+          ],
+          "reason": "cluster 1 representative"
+        },
+        {
+          "conv_id": "support-0230",
+          "trace_ids": [
+            "1aa680db88fde23d9b11d1ea1baf5774"
+          ],
+          "reason": "cluster 2 representative"
+        },
+        {
+          "conv_id": "support-0044",
+          "trace_ids": [
+            "9914111bd5191e9633b350b7cb438c0b"
+          ],
+          "reason": "cluster 3 representative"
+        },
+        {
+          "conv_id": "support-0239",
+          "trace_ids": [
+            "0fa07203c8e76af9b4de6764a9650452",
+            "c9433b3171e0b43a333436cfdf849721"
+          ],
+          "reason": "cluster 4 representative"
+        },
+        {
+          "conv_id": "support-0092",
+          "trace_ids": [
+            "406b5e768a2f3646cda044418c2b76df"
+          ],
+          "reason": "cluster 5 representative"
+        },
+        {
+          "conv_id": "support-0024",
+          "trace_ids": [
+            "37b36422aa77866e7b270903cf7c7c3f"
+          ],
+          "reason": "cluster 6 representative"
+        },
+        {
+          "conv_id": "support-0030",
+          "trace_ids": [
+            "ea9a6ee443c3944d299a5c39ae2d18b5"
+          ],
+          "reason": "cluster 7 representative"
+        },
+        {
+          "conv_id": "support-0147",
+          "trace_ids": [
+            "6b7dcb836f50e6e518da6b7f6466974a"
+          ],
+          "reason": "cluster 0 representative"
+        },
+        {
+          "conv_id": "support-0125",
+          "trace_ids": [
+            "16b20a310688ce807d8e53fa7fec04d7"
+          ],
+          "reason": "cluster 1 representative"
+        },
+        {
+          "conv_id": "support-0055",
+          "trace_ids": [
+            "2270893b9208b60097adb8a62521120d"
+          ],
+          "reason": "cluster 2 representative"
+        },
+        {
+          "conv_id": "support-0046",
+          "trace_ids": [
+            "e512c6306d25e85e611f66c2d26a22df"
+          ],
+          "reason": "cluster 3 representative"
+        },
+        {
+          "conv_id": "support-0109",
+          "trace_ids": [
+            "1f7c14e738e3536fb69e45a4f397f789",
+            "d419d336d02fe64493eae615e1e3b9f6"
+          ],
+          "reason": "cluster 4 representative"
+        },
+        {
+          "conv_id": "support-0101",
+          "trace_ids": [
+            "0698d4677a972d6fa63a588062264a18"
+          ],
+          "reason": "cluster 5 representative"
+        },
+        {
+          "conv_id": "support-0081",
+          "trace_ids": [
+            "1e547dc1864e17573b84f4092cb7a89c"
+          ],
+          "reason": "cluster 6 representative"
+        }
+      ]
+    },
+    {
+      "name": "batch2",
+      "title": "One dimension",
+      "strategy": "30 traces across the user-role dimension: 10 shopper, 10 merchant, 10 support (random within each role, chosen before looking at outcomes)",
+      "items": [
+        {
+          "conv_id": "support-0008",
+          "trace_ids": [
+            "29aac2020c57928d429855dc59780477"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0038",
+          "trace_ids": [
+            "95dc3203865d08cf1745ae1aafaf1c0c"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0054",
+          "trace_ids": [
+            "f1cd0bcd1cd872c04b4a1e0f08b5886e"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0079",
+          "trace_ids": [
+            "1cc25f02f1857f8bf99102bc3263c20f"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0095",
+          "trace_ids": [
+            "556ef759c36d2dbdd3671e0efea9a4fd"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0178",
+          "trace_ids": [
+            "4cbedc4f061dc4a251f24a3f72d63ea7"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0182",
+          "trace_ids": [
+            "affe760eaba4b53e6a9687556de95d0a"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0196",
+          "trace_ids": [
+            "ab18347280fb35617b20cc48731bea6c"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0231",
+          "trace_ids": [
+            "65bdc150c8f72ad02b9f50ea123e647d"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0236",
+          "trace_ids": [
+            "0ff6e285d2ee39ec568c777e42e4fe7b",
+            "3bc8b35ffa19fda350085d5098d63615"
+          ],
+          "reason": "role=shopper (random within role)"
+        },
+        {
+          "conv_id": "support-0113",
+          "trace_ids": [
+            "44c9881ad110725f4abae13092a3c51d"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0119",
+          "trace_ids": [
+            "b70ca07e368446a45f52cfe66423f891"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0120",
+          "trace_ids": [
+            "3ef2bb802e49a5b70f9ce69be2940f39"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0121",
+          "trace_ids": [
+            "e6937be6f93a99b1484ebfff8ecd76bf"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0122",
+          "trace_ids": [
+            "5b7d371772c6da5cddd5dbd9f11008e2"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0143",
+          "trace_ids": [
+            "567ac3b8cd4da7d78d274d3f9d913a65"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0180",
+          "trace_ids": [
+            "d133a1ed4be47ea07fc427b0ca163178"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0205",
+          "trace_ids": [
+            "6faa5c4ae684fc29f73c5387f94b2d86"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0216",
+          "trace_ids": [
+            "aa153840b2d49cfc0d66ca47ddcd5a95"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0217",
+          "trace_ids": [
+            "e2902337a17205dc0ab8410cc02ea241"
+          ],
+          "reason": "role=merchant (random within role)"
+        },
+        {
+          "conv_id": "support-0150",
+          "trace_ids": [
+            "ebcf76db59713e1f36136d9fc39b3cb7"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0152",
+          "trace_ids": [
+            "8e4b75bbb9cef17064a849b5adecf78c"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0154",
+          "trace_ids": [
+            "2b5cca1b6e34611069dd8e5077fa0f6f"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0156",
+          "trace_ids": [
+            "9b0d483113ea70a5288358d8e9d2cee2"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0157",
+          "trace_ids": [
+            "1c88d16f13a83cb85b04fa98736af6d4"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0166",
+          "trace_ids": [
+            "b2f385a26ce6311dfeb4cd28163c69eb"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0170",
+          "trace_ids": [
+            "5f747d39653f00eb3406182d8b364c6e"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0171",
+          "trace_ids": [
+            "d15fbd3ed1acd8d3f8f2651589dc57b9"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0175",
+          "trace_ids": [
+            "9b94fd8a90e4da35e6e29e3e7c18add9"
+          ],
+          "reason": "role=support (random within role)"
+        },
+        {
+          "conv_id": "support-0199",
+          "trace_ids": [
+            "a19265a16240c2be0223879c6f6671ba"
+          ],
+          "reason": "role=support (random within role)"
+        }
+      ]
+    },
+    {
+      "name": "batch3",
+      "title": "Depth search",
+      "strategy": "25 traces retrieved by three depth searches: write tool rejected (8), find_order>1 with no get_order (9), internal identifier in a reply to a shopper (8)",
+      "items": [
+        {
+          "conv_id": "support-0130",
+          "trace_ids": [
+            "b1547aac86e65df291045890362e0c0c"
+          ],
+          "reason": "depth search for write_tool_used_as_probe"
+        },
+        {
+          "conv_id": "support-0043",
+          "trace_ids": [
+            "836d820d3256d0ab9d121173e038ce94"
+          ],
+          "reason": "depth search for write_tool_used_as_probe"
+        },
+        {
+          "conv_id": "support-0039",
+          "trace_ids": [
+            "af283c1e7665ab4b4af425430b9165b5"
+          ],
+          "reason": "depth search for write_tool_used_as_probe"
+        },
+        {
+          "conv_id": "support-0045",
+          "trace_ids": [
+            "a1917724c8f63c6a27f58094ded0db66"
+          ],
+          "reason": "depth search for write_tool_used_as_probe"
+        },
+        {
+          "conv_id": "support-0127",
+          "trace_ids": [
+            "12e89bcdb9b47ae23cd417198470aa5d"
+          ],
+          "reason": "depth search for write_tool_used_as_probe"
+        },
+        {
+          "conv_id": "support-0035",
+          "trace_ids": [
+            "3a990f0dfed294fbaaea8ea14fbe069f"
+          ],
+          "reason": "depth search for write_tool_used_as_probe"
+        },
+        {
+          "conv_id": "support-0041",
+          "trace_ids": [
+            "91c974875b432fd6a5d4586e8152e011"
+          ],
+          "reason": "depth search for write_tool_used_as_probe"
+        },
+        {
+          "conv_id": "support-0219",
+          "trace_ids": [
+            "2be248a66198db6cca075f04bfc5516f"
+          ],
+          "reason": "depth search for write_tool_used_as_probe"
+        },
+        {
+          "conv_id": "support-0013",
+          "trace_ids": [
+            "4baf5605bc0d6568fb08953a0e51719c"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0068",
+          "trace_ids": [
+            "64ae37e822bddc82eb446a0505d4e1ab"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0177",
+          "trace_ids": [
+            "d5460812f104012d837914b610b38c61"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0053",
+          "trace_ids": [
+            "1f1bfe1210333a76b76e7867903b1217"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0238",
+          "trace_ids": [
+            "2ed820cc595d2b5b2131794b8ae7647b",
+            "64420291cc39418e3dbb06446424b8b7"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0108",
+          "trace_ids": [
+            "07ada80bcf022285a2239d362f5abe13",
+            "5860f4a8895b890bd9b7f239342629b9"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0110",
+          "trace_ids": [
+            "ded7a44fb6e2edd26078d17ac46f1627",
+            "cdefd3b4e749fb5acbe84263b5d0cb59"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0070",
+          "trace_ids": [
+            "814b0281c21c0555af10cde74a475794"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0005",
+          "trace_ids": [
+            "ba4f4b7c1852749b328d7a985fde2817"
+          ],
+          "reason": "depth search for unverified_order_match"
+        },
+        {
+          "conv_id": "support-0244",
+          "trace_ids": [
+            "66e4a4ce67a204472a73d8155c2098ab",
+            "e2b49ea665c651c551262cdb7693e7b6"
+          ],
+          "reason": "depth search for exposes_internals"
+        },
+        {
+          "conv_id": "support-0223",
+          "trace_ids": [
+            "2558415ad4cfec3de24f1ed38904e504"
+          ],
+          "reason": "depth search for exposes_internals"
+        },
+        {
+          "conv_id": "support-0083",
+          "trace_ids": [
+            "fc9821a34a4b3fb98bcc94d9d65d16cd"
+          ],
+          "reason": "depth search for exposes_internals"
+        },
+        {
+          "conv_id": "support-0220",
+          "trace_ids": [
+            "a58bc3a0c6517e0868dd37bbeec92898"
+          ],
+          "reason": "depth search for exposes_internals"
+        },
+        {
+          "conv_id": "support-0232",
+          "trace_ids": [
+            "d52205e715fe3d0dd86c90c4db62e26e"
+          ],
+          "reason": "depth search for exposes_internals"
+        },
+        {
+          "conv_id": "support-0188",
+          "trace_ids": [
+            "c882ffbd5685bf92b663cfad194e0034"
+          ],
+          "reason": "depth search for exposes_internals"
+        },
+        {
+          "conv_id": "support-0221",
+          "trace_ids": [
+            "6f19de41c73370a6ce8949d309b8be3e"
+          ],
+          "reason": "depth search for exposes_internals"
+        },
+        {
+          "conv_id": "support-0082",
+          "trace_ids": [
+            "8d816efc986fa4a49b73cc7b76d088f2"
+          ],
+          "reason": "depth search for exposes_internals"
+        }
+      ]
+    },
+    {
+      "name": "batch4",
+      "title": "Final random",
+      "strategy": "15 uniform random after drafting the taxonomy",
+      "items": [
+        {
+          "conv_id": "support-0012",
+          "trace_ids": [
+            "61e1fb278cce294eb4752523efe7de0e"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0015",
+          "trace_ids": [
+            "9ad03039361a12006870c56f9c993f83"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0021",
+          "trace_ids": [
+            "8365fc423711f5edcc121418a2455a3b"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0022",
+          "trace_ids": [
+            "6a920e71230643a4271f3ea2be50159a"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0023",
+          "trace_ids": [
+            "2de1b7886bbbef2cc2cd6e33b7196279"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0059",
+          "trace_ids": [
+            "446b880fff8e099eb19057a9378a0639"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0067",
+          "trace_ids": [
+            "a0352957a11f73f7b5d36bdbf26c02ef"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0088",
+          "trace_ids": [
+            "2efe64bc4d5dc732cebd6928c1dbc8b6"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0105",
+          "trace_ids": [
+            "a42d9be9f75443cc9d67d01cbb8dd85a"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0124",
+          "trace_ids": [
+            "ca5d141684927fbbd1ccf9fdcbe70966"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0126",
+          "trace_ids": [
+            "9d98613d9dfbb6c004532795f0edebc9"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0133",
+          "trace_ids": [
+            "f6eebd3cd12381904d2e10dd35a89065"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0135",
+          "trace_ids": [
+            "a27f828f0e9724b211e04afb496864be"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0141",
+          "trace_ids": [
+            "3cb360e33c6bffda4c27b9cf6cb08abb"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        },
+        {
+          "conv_id": "support-0151",
+          "trace_ids": [
+            "828e55bda0a43650efa451195fba738d"
+          ],
+          "reason": "uniform random after the taxonomy draft (saturation check)"
+        }
+      ]
+    }
+  ]
+}

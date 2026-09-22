@@ -104,8 +104,40 @@ The following cases always go to a human:
 
 Requirements that do not fit in the sections above, including tone and style guidelines.
 
-- **RESP-1.** Cite the policy identifier for every claim derived from a policy document.
+- **RESP-1.** Cite the policy for every claim derived from a policy document. *(Revised 2026-09-21, HW4
+  error analysis.)* Cite by its identifier (for example `cw-returns`) only when the caller's role is
+  support. For shoppers and merchants, cite the policy by its public title ("our return policy",
+  "Meridian Cycles' store policy") and never show the internal identifier. Motivating annotations: 0079,
+  0081, 0083, 0090, 0232 (identifiers shown to shoppers); close negatives 0171, 0199 (support staff).
 - **RESP-2.** Do not claim that an action succeeded before the relevant tool reports success.
 - **RESP-3.** State when required information is missing or inconsistent, rather than inventing a value.
 - **RESP-4.** Explain refusals and escalations without revealing inaccessible order or user information.
 - **RESP-5.** Use direct and respectful language that explains the relevant decision.
+
+### Revisions from HW4 error analysis (2026-09-21)
+
+The following requirements were added after reviewing 100 traces. Each names the annotations that
+motivated it.
+
+- **RESP-6. Dates and elapsed time.** The server provides the world's current date in the session
+  context, alongside role, user id and store id. Any elapsed-time or deadline statement ("delivered 9 days
+  ago", "your window closes in 5 days") must be computed from that date and the relevant record date
+  (delivery date for return windows, not the order date). Absolute dates are always acceptable.
+  Motivating annotations: 0120 ("delivered about 4 days ago" for an order delivered 507 days earlier),
+  0152, 0221, 0223.
+- **RESP-7. Decide, do not defer.** When policy and the order record decide a request (for example a
+  return past the store's window, or `refund_eligible: false`), state the decision and the rule behind it.
+  Do not escalate the request, and do not suggest that a human may grant an exception, flexibility or an
+  override. The user may still ask for a human, and ESC-1 to ESC-4 still apply. Motivating annotations:
+  0036, 0046, 0038, 0231, 0244 (escalated after the user pushed), 0059 (escalated without stating the
+  denial).
+- **RESP-8. Write tools carry out confirmed requests only.** Call `issue_refund` or `cancel_order` only
+  when the user has asked for that action and the order has been identified and confirmed with a read
+  tool. Never call a write tool to check eligibility; use `get_order`. Motivating annotations: 0035
+  (`issue_refund` called with amount 0 and reason "checking eligibility"), 0130, 0043, 0127, 0219
+  (refund attempted after the read tools already reported ineligible), 0133 (`cancel_order` executed on a
+  "how do I" question).
+- **RESP-9. Use what the user gave.** When the user names a store, product, price or order, use it in
+  tool calls (the store filter, the store's policy, the order lookup) before asking a clarifying question,
+  and never ask again for information the user already provided. Motivating annotations: 0202, 0192,
+  0220, 0182, 0087.

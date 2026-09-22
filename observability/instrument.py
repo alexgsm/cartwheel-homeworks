@@ -12,6 +12,7 @@ Artifact G).
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 from pathlib import Path
@@ -108,6 +109,67 @@ def setup_tracing() -> bool:
         return False
     log.info("tracing enabled; spans go to %s", os.environ.get("LANGFUSE_HOST"))
     return True
+
+
+_workshop: Any = None
+
+
+def setup_workshop() -> Any:
+    """Mirror runs to a local Raindrop Workshop (HW4 Part C); off unless opted in.
+
+    Active only when RAINDROP_LOCAL_DEBUGGER is set. Call after setup_tracing():
+    Langfuse stays the OpenTelemetry provider owner, and Raindrop attaches its
+    span processors to that provider instead of installing a second one. The
+    SDK only exports tool spans when it has an API key and tracing enabled, so
+    its "cloud" endpoint is pointed at the local Workshop with a placeholder
+    key: nothing leaves the machine. Returns the raindrop module or None.
+    """
+    global _workshop
+    url = os.environ.get("RAINDROP_LOCAL_DEBUGGER", "").strip()
+    if not url:
+        return None
+    if _workshop is not None:
+        return _workshop
+    try:
+        import raindrop.analytics as raindrop
+    except ImportError:
+        log.warning("RAINDROP_LOCAL_DEBUGGER is set but raindrop-ai is not installed")
+        return None
+    raindrop.init(
+        api_key="local-workshop-only",
+        endpoint=url,
+        local_workshop_url=None,  # the endpoint already is the Workshop
+        tracing_enabled=True,
+        auto_instrument=False,  # OpenLLMetry already instruments the Agents SDK
+        bypass_otel_for_tools=True,
+        app_git=False,
+    )
+    _workshop = raindrop
+    log.info("Raindrop Workshop mirroring enabled; runs go to %s", url)
+    return raindrop
+
+
+def workshop_tool_calls(new_items: list[Any]) -> list[dict[str, Any]]:
+    """Pair each tool call in a Runner turn with its output, in call order."""
+    from agents.items import ToolCallItem, ToolCallOutputItem
+
+    calls: dict[Any, dict[str, Any]] = {}
+    ordered: list[dict[str, Any]] = []
+    for item in new_items:
+        raw = item.raw_item
+        if isinstance(item, ToolCallItem):
+            try:
+                args = json.loads(getattr(raw, "arguments", None) or "{}")
+            except ValueError:
+                args = getattr(raw, "arguments", None)
+            record = {"name": getattr(raw, "name", None) or "tool", "input": args, "output": None}
+            calls[getattr(raw, "call_id", None)] = record
+            ordered.append(record)
+        elif isinstance(item, ToolCallOutputItem):
+            call_id = raw.get("call_id") if isinstance(raw, dict) else getattr(raw, "call_id", None)
+            if call_id in calls:
+                calls[call_id]["output"] = item.output
+    return ordered
 
 
 def record_tool_result(ctx: "AuthContext", result: dict[str, Any]) -> None:

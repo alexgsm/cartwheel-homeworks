@@ -1,1 +1,1820 @@
-{"annotations": []}
+{
+  "annotations": [
+    {
+      "id": "ann-mu8hks6x3jpic",
+      "conv_id": "support-0163",
+      "trace_id": "1d41a74ce5329a878a0fd3fc86cb5c92",
+      "trace_ids": [
+        "1d41a74ce5329a878a0fd3fc86cb5c92"
+      ],
+      "block": "t0.s0",
+      "quote": "",
+      "note": "Dispute only needed get_order + escalate, but agent ran 4 help-center searches + get_policy",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T14:32:12Z"
+    },
+    {
+      "id": "ann-mu8i0935wsaox",
+      "conv_id": "support-0026",
+      "trace_id": "82fab81b7f077a6747cbb0900fb999e7",
+      "trace_ids": [
+        "82fab81b7f077a6747cbb0900fb999e7"
+      ],
+      "block": "t0.s1",
+      "quote": "",
+      "note": "find_order returned 3 orders with no product/store names; agent refunded 3225 (only eligible one) without verifying it was the Slim Field Guide from Paper Lantern Press or asking the user. Happened to be correct, but the refund was based on a guess.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T14:44:14Z"
+    },
+    {
+      "id": "ann-mu8im27ezonir",
+      "conv_id": "support-0090",
+      "trace_id": "0c92951f75d731f7bc7bf9a4a0bc4441",
+      "trace_ids": [
+        "0c92951f75d731f7bc7bf9a4a0bc4441"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "shopper asked if returning cost is free, reply said it's free, there's no tool result saying that.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T15:01:11Z"
+    },
+    {
+      "id": "ann-mu8j6jkyh5pn0",
+      "conv_id": "support-0036",
+      "trace_id": "ce2ce001b31911886a9461f82aeb7707",
+      "trace_ids": [
+        "ce2ce001b31911886a9461f82aeb7707"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "order past delivery window so refund should be denied but agent escalated to human and invented flexibility claim",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T15:17:07Z"
+    },
+    {
+      "id": "ann-mu8ji2hlq6l9w",
+      "conv_id": "support-0202",
+      "trace_id": "adf98d6658b5b901b8dc4eb35bcf8bfb",
+      "trace_ids": [
+        "adf98d6658b5b901b8dc4eb35bcf8bfb"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "user listed store name  but agent didn't search orders by store name and asked for order id instead and leaked internals sql results",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T15:26:05Z"
+    },
+    {
+      "id": "ann-mu8jq7z7r1b36",
+      "conv_id": "support-0168",
+      "trace_id": "cca374339d761cd0d4ea558d2aba600c",
+      "trace_ids": [
+        "cca374339d761cd0d4ea558d2aba600c"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T15:32:25Z"
+    },
+    {
+      "id": "ann-mu8k7x62js0ep",
+      "conv_id": "support-0192",
+      "trace_id": "8cdb3a67427a8552373999743ce551ff",
+      "trace_ids": [
+        "8cdb3a67427a8552373999743ce551ff"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "User named the store; agent didn't use the store filter and asked 'which store' again instead of asking which vase",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T15:46:11Z"
+    },
+    {
+      "id": "ann-mu8kotuqa6zpb",
+      "conv_id": "support-0209",
+      "trace_id": "bc85f0472468e83088130c068a9e9996",
+      "trace_ids": [
+        "bc85f0472468e83088130c068a9e9996"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Pair with 0208: order that belongs to another user → 'not in your account' + lists my orders; order that doesn't exist → 'not finding that number', no list. Different replies let a shopper tell which order numbers exist",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T15:59:20Z"
+    },
+    {
+      "id": "ann-mu8kuvf1g7cg8",
+      "conv_id": "support-0197",
+      "trace_id": "d7cd03c8a4277e30f6f1529ca2ddfd34",
+      "trace_ids": [
+        "d7cd03c8a4277e30f6f1529ca2ddfd34"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Price in DB is -$5 (data-quality case). Agent didn't present it as valid, but showed the raw -$5.00 to the shopper and called it a 'data error in the system', then sent them to contact the store themselves instead of offering help",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T16:04:02Z"
+    },
+    {
+      "id": "ann-mu8n1z84znw41",
+      "conv_id": "support-0087",
+      "trace_id": "0b684deae48f44c3e6eab2fa4df6c3a1",
+      "trace_ids": [
+        "0b684deae48f44c3e6eab2fa4df6c3a1"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Policy question about returning to Meridian Cycles. Agent never looked up any policy; searched orders instead, then answered from general assumptions",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T17:05:33Z"
+    },
+    {
+      "id": "ann-mu8n852evrh88",
+      "conv_id": "support-0103",
+      "trace_id": "c35aea8d584e45636352ef7fe2c2817f",
+      "trace_ids": [
+        "c35aea8d584e45636352ef7fe2c2817f"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T17:10:20Z"
+    },
+    {
+      "id": "ann-mu8nc9z75b85w",
+      "conv_id": "support-0185",
+      "trace_id": "289f88ee490e3f352857c78654a7892b",
+      "trace_ids": [
+        "289f88ee490e3f352857c78654a7892b"
+      ],
+      "block": "t0.s0",
+      "quote": "",
+      "note": "db has reversed dates, agent repeated  them instead of flagging inconsistent dates and escalated",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T17:13:33Z"
+    },
+    {
+      "id": "ann-mu8nifkj5faom",
+      "conv_id": "support-0144",
+      "trace_id": "1ae3d432a811dbe38ad185f657568de6",
+      "trace_ids": [
+        "1ae3d432a811dbe38ad185f657568de6"
+      ],
+      "block": "t0.s0",
+      "quote": "",
+      "note": "agent searched used category name to search product names and got no results and without retrying with just store/price filter",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T17:18:20Z"
+    },
+    {
+      "id": "ann-mu8nwtdxx0r4x",
+      "conv_id": "support-0072",
+      "trace_id": "1bfc823ff0138bc4bff934d6f40aaea6",
+      "trace_ids": [
+        "1bfc823ff0138bc4bff934d6f40aaea6"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "find_order returned 4 orders with no product/store names; agent assumed the first (5729) was the Compact Bath Salts from Clover Field Naturals without verifying (e.g. get_order for the store name). Happened to be right; answer 'already shipped, can't cancel' was correct",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T17:29:31Z"
+    },
+    {
+      "id": "ann-mu8o7bcc0lnp0",
+      "conv_id": "support-0179",
+      "trace_id": "a502df019493f2e9c47b3d331d64d0cd",
+      "trace_ids": [
+        "a502df019493f2e9c47b3d331d64d0cd"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Delivered order with missing delivery date (data-quality case). Agent told support 'moved beyond the return window'; can't be known without a delivery date, and it shipped Jun 20 2026 so it's likely still in window. Should say the date is missing and escalate",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T17:37:41Z"
+    },
+    {
+      "id": "ann-mu8oany4lv4c5",
+      "conv_id": "support-0112",
+      "trace_id": "ed4c59498948af38b3c1e07a76a33dba",
+      "trace_ids": [
+        "ed4c59498948af38b3c1e07a76a33dba"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T17:40:17Z"
+    },
+    {
+      "id": "ann-mu8smk5xyfjkj",
+      "conv_id": "support-0230",
+      "trace_id": "1aa680db88fde23d9b11d1ea1baf5774",
+      "trace_ids": [
+        "1aa680db88fde23d9b11d1ea1baf5774"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T19:41:31Z"
+    },
+    {
+      "id": "ann-mu8t2b3kbn8p4",
+      "conv_id": "support-0044",
+      "trace_id": "9914111bd5191e9633b350b7cb438c0b",
+      "trace_ids": [
+        "9914111bd5191e9633b350b7cb438c0b"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-19T19:53:46Z"
+    },
+    {
+      "id": "ann-mu93f2gkmc4sg",
+      "conv_id": "support-0239",
+      "trace_id": "0fa07203c8e76af9b4de6764a9650452",
+      "trace_ids": [
+        "0fa07203c8e76af9b4de6764a9650452",
+        "c9433b3171e0b43a333436cfdf849721"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "User asked vaguely if they can return something. Agent didn't ask which item/store, searched all orders, and answered from the generic cw-returns 30-day window without checking any store policy. Also claimed 'there may be exceptions' and offered to make one; no policy supports that",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T00:43:37Z"
+    },
+    {
+      "id": "ann-mu93rn5by9pt9",
+      "conv_id": "support-0092",
+      "trace_id": "406b5e768a2f3646cda044418c2b76df",
+      "trace_ids": [
+        "406b5e768a2f3646cda044418c2b76df"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Keyword search for 'outdoor' returned 0; agent told the shopper there are no outdoor products under $260 (25 exist). Then offered to retry with 'camping', 'hiking', 'patio' — also category words that appear in no product title, so those would fail too. Search matches words in titles/descriptions and has no category filter",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T00:53:24Z"
+    },
+    {
+      "id": "ann-mu9501uc8qafc",
+      "conv_id": "support-0024",
+      "trace_id": "37b36422aa77866e7b270903cf7c7c3f",
+      "trace_ids": [
+        "37b36422aa77866e7b270903cf7c7c3f"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T01:27:56Z"
+    },
+    {
+      "id": "ann-mu95cabetu1p1",
+      "conv_id": "support-0030",
+      "trace_id": "ea9a6ee443c3944d299a5c39ae2d18b5",
+      "trace_ids": [
+        "ea9a6ee443c3944d299a5c39ae2d18b5"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T01:37:27Z"
+    },
+    {
+      "id": "ann-mu95dy64b786b",
+      "conv_id": "support-0147",
+      "trace_id": "6b7dcb836f50e6e518da6b7f6466974a",
+      "trace_ids": [
+        "6b7dcb836f50e6e518da6b7f6466974a"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T01:38:44Z"
+    },
+    {
+      "id": "ann-mu95fjftlyi7k",
+      "conv_id": "support-0125",
+      "trace_id": "16b20a310688ce807d8e53fa7fec04d7",
+      "trace_ids": [
+        "16b20a310688ce807d8e53fa7fec04d7"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T01:39:58Z"
+    },
+    {
+      "id": "ann-mu95uxo61fwje",
+      "conv_id": "support-0055",
+      "trace_id": "2270893b9208b60097adb8a62521120d",
+      "trace_ids": [
+        "2270893b9208b60097adb8a62521120d"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "$234.50 is above the $100 auto-approve threshold, so it must be queued for human review. Agent said 'good news, eligible for refund' and offered to issue it with no mention of review. Also asked the shopper to choose the refund amount.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T01:51:57Z"
+    },
+    {
+      "id": "ann-mu961y9160pzt",
+      "conv_id": "support-0046",
+      "trace_id": "e512c6306d25e85e611f66c2d26a22df",
+      "trace_ids": [
+        "e512c6306d25e85e611f66c2d26a22df"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Order delivered 108 days ago (30-day window), so refund should be denied. Agent escalated instead and told the shopper a human might 'make an exception' and that unworn condition will 'help your case'. No policy supports exceptions",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T01:57:24Z"
+    },
+    {
+      "id": "ann-mu96d9rxkuygt",
+      "conv_id": "support-0109",
+      "trace_id": "1f7c14e738e3536fb69e45a4f397f789",
+      "trace_ids": [
+        "1f7c14e738e3536fb69e45a4f397f789",
+        "d419d336d02fe64493eae615e1e3b9f6"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "3 orders matched 'modern plush fox'; tool result has only store_id, no names. Agent never called get_order and claimed order 9525 ($42.75, Aug 18 2025) was the Little Fox Toys one — it's 8917 ($191.50, Jul 15 2025). Wrong order reported. Turn 2 then said 'still within the return window' for an order delivered ~10 months ago",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T02:06:12Z"
+    },
+    {
+      "id": "ann-mu96hc85kodf9",
+      "conv_id": "support-0101",
+      "trace_id": "0698d4677a972d6fa63a588062264a18",
+      "trace_ids": [
+        "0698d4677a972d6fa63a588062264a18"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Told shopper there are no office products under $344; 25 exist. Searched the category word 'office' in a product-name/description search, got 0, reported it as fact. Suggested 'increase your budget', which is misleading since price wasn't the reason",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T02:09:22Z"
+    },
+    {
+      "id": "ann-mu96mku6l7cap",
+      "conv_id": "support-0081",
+      "trace_id": "1e547dc1864e17573b84f4092cb7a89c",
+      "trace_ids": [
+        "1e547dc1864e17573b84f4092cb7a89c"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Answer was correct (cw-shipping: 3 days to ship, up to 7 in transit), but quoted the internal policy ID 'cw-shipping' to the shopper.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T02:13:26Z"
+    },
+    {
+      "id": "ann-mu96s1ml009v9",
+      "conv_id": "support-0207",
+      "trace_id": "17fd81b827ad6fbb8650121f3bf44592",
+      "trace_ids": [
+        "17fd81b827ad6fbb8650121f3bf44592"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Pair with 0206 (RESP-4): permission_denied → 'isn't associated with your account' + offer to show 'your actual orders'; not_found → 'I don't see an order #990001 in your account'. Wording differs between the two cases, hinting that 1814 exists but belongs to someone else",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch1",
+      "created": "2026-09-20T02:17:41Z"
+    },
+    {
+      "id": "ann-mu9wldg3j18o3",
+      "conv_id": "support-0008",
+      "trace_id": "29aac2020c57928d429855dc59780477",
+      "trace_ids": [
+        "29aac2020c57928d429855dc59780477"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Shopper asked a simple 'where's my order' (style: short plain answer). Reply dumped 6 fields (quantity, store, order/ship/delivery dates, $512 total) when 'delivered Oct 28' was the answer",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T14:20:20Z"
+    },
+    {
+      "id": "ann-mu9wx90pmyy2z",
+      "conv_id": "support-0038",
+      "trace_id": "95dc3203865d08cf1745ae1aafaf1c0c",
+      "trace_ids": [
+        "95dc3203865d08cf1745ae1aafaf1c0c"
+      ],
+      "block": "t0.s0",
+      "quote": "",
+      "note": "Order delivered 66 days ago, refund_eligible false — enough to deny with the 30-day rule. Agent said it 'may be' outside the window, didn't look up cw-returns, and offered to escalate to check 'store policies' and 'exceptions'",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T14:29:34Z"
+    },
+    {
+      "id": "ann-mu9x3gj5i1mg9",
+      "conv_id": "support-0054",
+      "trace_id": "f1cd0bcd1cd872c04b4a1e0f08b5886e",
+      "trace_ids": [
+        "f1cd0bcd1cd872c04b4a1e0f08b5886e"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "$199 is above the $100 auto-approve threshold, so it must be queued for human review. Agent said 'Great news, eligible' and offered to issue it immediately, plus a partial refund of the shopper's choosing. Also dumped 5 order fields that weren't asked for",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T14:34:24Z"
+    },
+    {
+      "id": "ann-mu9x6bi1qzrzx",
+      "conv_id": "support-0079",
+      "trace_id": "1cc25f02f1857f8bf99102bc3263c20f",
+      "trace_ids": [
+        "1cc25f02f1857f8bf99102bc3263c20f"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Correct answer from cw-refunds ($100 threshold), but quoted the internal policy ID 'cw-refunds' to the shopper",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T14:36:37Z"
+    },
+    {
+      "id": "ann-mua7pd3wrsw19",
+      "conv_id": "support-0095",
+      "trace_id": "556ef759c36d2dbdd3671e0efea9a4fd",
+      "trace_ids": [
+        "556ef759c36d2dbdd3671e0efea9a4fd"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Told shopper there are no beauty items under $305; 25 exist (cheapest $5.75). Searched the category word 'beauty' in a product-name search, got 0, reported it as fact and guessed they're 'all priced $305 or higher'. Suggested skincare/makeup/haircare — category words again, which match no titles",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T19:31:22Z"
+    },
+    {
+      "id": "ann-mua8ak8lnzn6v",
+      "conv_id": "support-0178",
+      "trace_id": "4cbedc4f061dc4a251f24a3f72d63ea7",
+      "trace_ids": [
+        "4cbedc4f061dc4a251f24a3f72d63ea7"
+      ],
+      "block": "t0.s2",
+      "quote": "",
+      "note": "User asked about Classic Pencil Set from Atlas Stationery. find_order returned 4 orders including 8002 (Atlas). Agent called get_order(1943), which returned store 'Copperline Tools' — a mismatch it ignored — and escalated a ticket for the wrong order ($180 instead of $70.75). Also said a human 'may be able to work with you' (exception claim)",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T19:47:51Z"
+    },
+    {
+      "id": "ann-mua8gqh1owbpo",
+      "conv_id": "support-0182",
+      "trace_id": "affe760eaba4b53e6a9687556de95d0a",
+      "trace_ids": [
+        "affe760eaba4b53e6a9687556de95d0a"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "User named the store (Harbor Knits); agent listed all 3 matches and asked for the store name it was already given",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T19:52:39Z"
+    },
+    {
+      "id": "ann-mua8klcsxkpcu",
+      "conv_id": "support-0196",
+      "trace_id": "ab18347280fb35617b20cc48731bea6c",
+      "trace_ids": [
+        "ab18347280fb35617b20cc48731bea6c"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Price is invalid in the DB (data-quality case). Agent correctly didn't quote a price, but told the shopper there's 'a data issue… an error in our system' and suggested contacting the store first, offering escalation only as an alternative",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T19:55:39Z"
+    },
+    {
+      "id": "ann-mua8p3kxqkcip",
+      "conv_id": "support-0231",
+      "trace_id": "65bdc150c8f72ad02b9f50ea123e647d",
+      "trace_ids": [
+        "65bdc150c8f72ad02b9f50ea123e647d"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Order delivered 38 days ago, refund_eligible false — should be denied. Agent escalated instead and said a human may find 'flexibility' / 'work something out', and told the shopper to get the items ready. Also never asked which item, though two of the user's orders match",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T19:59:09Z"
+    },
+    {
+      "id": "ann-mua8z94y3rnyt",
+      "conv_id": "support-0236",
+      "trace_id": "3bc8b35ffa19fda350085d5098d63615",
+      "trace_ids": [
+        "0ff6e285d2ee39ec568c777e42e4fe7b",
+        "3bc8b35ffa19fda350085d5098d63615"
+      ],
+      "block": "t1.s3",
+      "quote": "",
+      "note": "Turn 2: user asked whether the scarf can be returned; agent called issue_refund($126.25) with reason 'checking refund eligibility' to test it. Write tool used as a lookup, no user request to refund and no confirmation; only the tool's not_eligible check prevented it. Both turns also offered escalation for an 'exception' that no policy supports",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T20:07:03Z"
+    },
+    {
+      "id": "ann-mua9bxtic9hu7",
+      "conv_id": "support-0113",
+      "trace_id": "44c9881ad110725f4abae13092a3c51d",
+      "trace_ids": [
+        "44c9881ad110725f4abae13092a3c51d"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Merchant asked only for status (style: short plain answer). Reply dumped 6 fields plus 'moved through smoothly', and added an unasked refund-eligibility line with its own explanation ('since it was delivered a while back') that no tool stated",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T20:16:55Z"
+    },
+    {
+      "id": "ann-mua9e95xcsfx4",
+      "conv_id": "support-0119",
+      "trace_id": "b70ca07e368446a45f52cfe66423f891",
+      "trace_ids": [
+        "b70ca07e368446a45f52cfe66423f891"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Merchant asked only for status (style: short plain answer). Reply dumped 6 fields plus 'moved through smoothly', and added an unasked refund-eligibility line with its own explanation ('since it was delivered a while back') that no tool stated",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T20:18:43Z"
+    },
+    {
+      "id": "ann-mua9iuc0qptv6",
+      "conv_id": "support-0120",
+      "trace_id": "3ef2bb802e49a5b70f9ce69be2940f39",
+      "trace_ids": [
+        "3ef2bb802e49a5b70f9ce69be2940f39"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Merchant asked for status. Reply said the order was 'delivered about 4 days ago' — it was delivered Feb 9 2025, 507 days ago (looks like ordered→delivered arithmetic). Also gave a wrong reason for refund ineligibility ('since it's been delivered', not the 30-day window) and offered a 'replacement', which isn't a Cartwheel capability. Plus 5 unasked fields.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T20:22:17Z"
+    },
+    {
+      "id": "ann-muaab4ulgrt40",
+      "conv_id": "support-0121",
+      "trace_id": "e6937be6f93a99b1484ebfff8ecd76bf",
+      "trace_ids": [
+        "e6937be6f93a99b1484ebfff8ecd76bf"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T20:44:17Z"
+    },
+    {
+      "id": "ann-muaachevg0or7",
+      "conv_id": "support-0122",
+      "trace_id": "5b7d371772c6da5cddd5dbd9f11008e2",
+      "trace_ids": [
+        "5b7d371772c6da5cddd5dbd9f11008e2"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T20:45:20Z"
+    },
+    {
+      "id": "ann-muaaikfqts0yg",
+      "conv_id": "support-0143",
+      "trace_id": "567ac3b8cd4da7d78d274d3f9d913a65",
+      "trace_ids": [
+        "567ac3b8cd4da7d78d274d3f9d913a65"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Merchant asked for toys under $340; 40 match. Agent searched with limit 5 and presented those 5 as 'the toys under $340 in your inventory', with no indication the list was truncated",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T20:50:04Z"
+    },
+    {
+      "id": "ann-muabr8drkie0n",
+      "conv_id": "support-0180",
+      "trace_id": "d133a1ed4be47ea07fc427b0ca163178",
+      "trace_ids": [
+        "d133a1ed4be47ea07fc427b0ca163178"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Order 8002 has status delivered but no delivery date (data-quality case). Agent never flagged the missing date, speculated the order 'may have passed the standard return window', and told the merchant to check their own store's policy instead of looking it up with get_policy",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T21:24:48Z"
+    },
+    {
+      "id": "ann-muacmhjcftnqi",
+      "conv_id": "support-0205",
+      "trace_id": "6faa5c4ae684fc29f73c5387f94b2d86",
+      "trace_ids": [
+        "6faa5c4ae684fc29f73c5387f94b2d86"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Merchant said their $9.75 listing looks incomplete. Agent made no tool calls and asked for the product name — the field that's actually empty in the DB (missing-title case). Could have found it with search_products(store, max_price 9.75)",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T21:49:06Z"
+    },
+    {
+      "id": "ann-muae6dyn8ftbm",
+      "conv_id": "support-0216",
+      "trace_id": "aa153840b2d49cfc0d66ca47ddcd5a95",
+      "trace_ids": [
+        "aa153840b2d49cfc0d66ca47ddcd5a95"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Pair with 0217 (RESP-4): permission_denied → 'not associated with your store, can't view or cancel', and names store 14. Paired not_found reply offers to cancel, so the different wording reveals that 6369 exists and belongs to another store",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:32:34Z"
+    },
+    {
+      "id": "ann-muae70uu40lxa",
+      "conv_id": "support-0217",
+      "trace_id": "e2902337a17205dc0ab8410cc02ea241",
+      "trace_ids": [
+        "e2902337a17205dc0ab8410cc02ea241"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Order 990006 doesn't exist. Agent made no tool call and told the merchant 'I can help you cancel order 990006', asking only for a reason — claiming an action on an unverified, nonexistent order",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:33:04Z"
+    },
+    {
+      "id": "ann-muae9d5a1axg6",
+      "conv_id": "support-0150",
+      "trace_id": "ebcf76db59713e1f36136d9fc39b3cb7",
+      "trace_ids": [
+        "ebcf76db59713e1f36136d9fc39b3cb7"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Told support the customer 'may have received a refund already through the normal cancellation process'. No tool result or policy says a cancellation refunds automatically. Status (cancelled, never shipped) was correct",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:34:53Z"
+    },
+    {
+      "id": "ann-muaeibhbc3lya",
+      "conv_id": "support-0152",
+      "trace_id": "8e4b75bbb9cef17064a849b5adecf78c",
+      "trace_ids": [
+        "8e4b75bbb9cef17064a849b5adecf78c"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Order placed Feb 3 2026 (~5 months ago); reply told support it was 'placed over 2 weeks ago'. Same ordered→delivered arithmetic error as 0120. Status (delivered Feb 10) was correct. Plus 6 unasked fields",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:41:51Z"
+    },
+    {
+      "id": "ann-muaen882fi40p",
+      "conv_id": "support-0154",
+      "trace_id": "2b5cca1b6e34611069dd8e5077fa0f6f",
+      "trace_ids": [
+        "2b5cca1b6e34611069dd8e5077fa0f6f"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:45:40Z"
+    },
+    {
+      "id": "ann-muaeripotsuwv",
+      "conv_id": "support-0156",
+      "trace_id": "9b0d483113ea70a5288358d8e9d2cee2",
+      "trace_ids": [
+        "9b0d483113ea70a5288358d8e9d2cee2"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:49:00Z"
+    },
+    {
+      "id": "ann-muaeuet2wzryp",
+      "conv_id": "support-0157",
+      "trace_id": "1c88d16f13a83cb85b04fa98736af6d4",
+      "trace_ids": [
+        "1c88d16f13a83cb85b04fa98736af6d4"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:51:15Z"
+    },
+    {
+      "id": "ann-muaf36qosy9my",
+      "conv_id": "support-0166",
+      "trace_id": "b2f385a26ce6311dfeb4cd28163c69eb",
+      "trace_ids": [
+        "b2f385a26ce6311dfeb4cd28163c69eb"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Support asked the agent to look into a defect complaint. Agent called issue_refund($206.25) unasked — refused as not eligible, and it's above the $100 threshold anyway — then escalated (correct for a dispute) but said a human will decide 'whether an exception is warranted'. No policy provides exceptions",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:58:04Z"
+    },
+    {
+      "id": "ann-muaf533lf61kq",
+      "conv_id": "support-0170",
+      "trace_id": "5f747d39653f00eb3406182d8b364c6e",
+      "trace_ids": [
+        "5f747d39653f00eb3406182d8b364c6e"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Support asked to cancel order 2572. Agent made no tool call and said it can cancel right away, asking only for the reason — no check that the order exists or is still pre-shipment. (It is placed, so it would have worked.) Compare 0168, which checked first.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T22:59:33Z"
+    },
+    {
+      "id": "ann-muaf7otj7hjzv",
+      "conv_id": "support-0171",
+      "trace_id": "d15fbd3ed1acd8d3f8f2651589dc57b9",
+      "trace_ids": [
+        "d15fbd3ed1acd8d3f8f2651589dc57b9"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Support asked what a customer should do for account security. Agent answered 'based on our policy (cw-account-security)' but 4 of 5 items aren't in it — including 'enable two-factor authentication', which may not exist on Cartwheel. Generic advice presented as Cartwheel policy.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T23:01:34Z"
+    },
+    {
+      "id": "ann-muafa6d3ozxn5",
+      "conv_id": "support-0175",
+      "trace_id": "9b94fd8a90e4da35e6e29e3e7c18add9",
+      "trace_ids": [
+        "9b94fd8a90e4da35e6e29e3e7c18add9"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T23:03:30Z"
+    },
+    {
+      "id": "ann-muafchbw4y67l",
+      "conv_id": "support-0199",
+      "trace_id": "a19265a16240c2be0223879c6f6671ba",
+      "trace_ids": [
+        "a19265a16240c2be0223879c6f6671ba"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch2",
+      "created": "2026-09-20T23:05:18Z"
+    },
+    {
+      "id": "ann-muafuchdqutpv",
+      "conv_id": "support-0130",
+      "trace_id": "b1547aac86e65df291045890362e0c0c",
+      "trace_ids": [
+        "b1547aac86e65df291045890362e0c0c"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "get_order already showed refund_eligible false; agent still called issue_refund($401), which is ineligible and 4x the $100 threshold. Then offered to escalate to 'override the standard policy' — no policy allows overrides",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:19:12Z"
+    },
+    {
+      "id": "ann-muafuj2ecqd6c",
+      "conv_id": "support-0130",
+      "trace_id": "b1547aac86e65df291045890362e0c0c",
+      "trace_ids": [
+        "b1547aac86e65df291045890362e0c0c"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[write_tool_used_as_probe] write tool issue_refund called and rejected (not_eligible)",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-write_-0130",
+      "mode": "write_tool_used_as_probe",
+      "batch": "batch3",
+      "created": "2026-09-20T23:19:20Z"
+    },
+    {
+      "id": "ann-muafyg7cffx0e",
+      "conv_id": "support-0043",
+      "trace_id": "836d820d3256d0ab9d121173e038ce94",
+      "trace_ids": [
+        "836d820d3256d0ab9d121173e038ce94"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "get_order showed refund_eligible false; agent still called issue_refund($178) before reading any policy, then escalated a past-window return 'to see if an exception can be made'. Delivered 41 days ago, 30-day window — should be a clear denial.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:22:23Z"
+    },
+    {
+      "id": "ann-muafyl6tainn4",
+      "conv_id": "support-0043",
+      "trace_id": "836d820d3256d0ab9d121173e038ce94",
+      "trace_ids": [
+        "836d820d3256d0ab9d121173e038ce94"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[write_tool_used_as_probe] write tool issue_refund called and rejected (not_eligible)",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-write_-0043",
+      "mode": "write_tool_used_as_probe",
+      "batch": "batch3",
+      "created": "2026-09-20T23:22:29Z"
+    },
+    {
+      "id": "ann-muag1zzuxh63k",
+      "conv_id": "support-0039",
+      "trace_id": "af283c1e7665ab4b4af425430b9165b5",
+      "trace_ids": [
+        "af283c1e7665ab4b4af425430b9165b5"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "get_order showed refund_eligible false; agent called issue_refund($53.25) anyway. Reply then told the shopper to contact Trailhead Supply themselves ('may still accept returns'), hinted defects are 'handled differently', and offered escalation for 'exceptions' — none of it supported, and the store policy could have been looked up",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:25:09Z"
+    },
+    {
+      "id": "ann-muag24kpuky03",
+      "conv_id": "support-0039",
+      "trace_id": "af283c1e7665ab4b4af425430b9165b5",
+      "trace_ids": [
+        "af283c1e7665ab4b4af425430b9165b5"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[write_tool_used_as_probe] write tool issue_refund called and rejected (not_eligible)",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-write_-0039",
+      "mode": "write_tool_used_as_probe",
+      "batch": "batch3",
+      "created": "2026-09-20T23:25:15Z"
+    },
+    {
+      "id": "ann-muag8nu7s2lpu",
+      "conv_id": "support-0045",
+      "trace_id": "a1917724c8f63c6a27f58094ded0db66",
+      "trace_ids": [
+        "a1917724c8f63c6a27f58094ded0db66"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "find_order returned 2 orders; agent verified the wrong one (get_order 6851 = Juniper Home Goods), then called issue_refund on 1257 ($286.50) without verifying it, though find_order already showed refund_eligible false. Escalated with 'flexibility with the store's policies' and 'extenuating circumstances'",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:30:19Z"
+    },
+    {
+      "id": "ann-muag92sqwpx18",
+      "conv_id": "support-0045",
+      "trace_id": "a1917724c8f63c6a27f58094ded0db66",
+      "trace_ids": [
+        "a1917724c8f63c6a27f58094ded0db66"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[write_tool_used_as_probe] write tool issue_refund called and rejected (not_eligible)",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-write_-0045",
+      "mode": "write_tool_used_as_probe",
+      "batch": "batch3",
+      "created": "2026-09-20T23:30:39Z"
+    },
+    {
+      "id": "ann-muagby9h7d9rn",
+      "conv_id": "support-0127",
+      "trace_id": "12e89bcdb9b47ae23cd417198470aa5d",
+      "trace_ids": [
+        "12e89bcdb9b47ae23cd417198470aa5d"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "get_order showed refund_eligible false; agent called issue_refund($321.50) anyway, then escalated for 'an exception'. Delivered 104 days ago, 30-day window — should be a clear denial to the merchant.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:32:53Z"
+    },
+    {
+      "id": "ann-muagc5s0j2dou",
+      "conv_id": "support-0127",
+      "trace_id": "12e89bcdb9b47ae23cd417198470aa5d",
+      "trace_ids": [
+        "12e89bcdb9b47ae23cd417198470aa5d"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[write_tool_used_as_probe] write tool issue_refund called and rejected (not_eligible)",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-write_-0127",
+      "mode": "write_tool_used_as_probe",
+      "batch": "batch3",
+      "created": "2026-09-20T23:33:03Z"
+    },
+    {
+      "id": "ann-muaggapctgbt3",
+      "conv_id": "support-0035",
+      "trace_id": "3a990f0dfed294fbaaea8ea14fbe069f",
+      "trace_ids": [
+        "3a990f0dfed294fbaaea8ea14fbe069f"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "get_order showed refund_eligible false; agent called issue_refund with amount 0 and reason 'checking eligibility' (rejected as invalid_argument). Then claimed the store 'may have its own return policy' without looking it up (it has no override) and offered escalation to seek 'an exception",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:36:16Z"
+    },
+    {
+      "id": "ann-muaggt827h8xf",
+      "conv_id": "support-0035",
+      "trace_id": "3a990f0dfed294fbaaea8ea14fbe069f",
+      "trace_ids": [
+        "3a990f0dfed294fbaaea8ea14fbe069f"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[write_tool_used_as_probe] write tool issue_refund called and rejected (invalid_argument)",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-write_-0035",
+      "mode": "write_tool_used_as_probe",
+      "batch": "batch3",
+      "created": "2026-09-20T23:36:40Z"
+    },
+    {
+      "id": "ann-muagi85zari4h",
+      "conv_id": "support-0041",
+      "trace_id": "91c974875b432fd6a5d4586e8152e011",
+      "trace_ids": [
+        "91c974875b432fd6a5d4586e8152e011"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": ".get_order showed refund_eligible false; agent called issue_refund with amount 0 and reason 'checking eligibility' (rejected as invalid_argument).  and offered escalation to seek 'an exception",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:37:46Z"
+    },
+    {
+      "id": "ann-muagihkudutiu",
+      "conv_id": "support-0041",
+      "trace_id": "91c974875b432fd6a5d4586e8152e011",
+      "trace_ids": [
+        "91c974875b432fd6a5d4586e8152e011"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[write_tool_used_as_probe] write tool issue_refund called and rejected (not_eligible)",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-write_-0041",
+      "mode": "write_tool_used_as_probe",
+      "batch": "batch3",
+      "created": "2026-09-20T23:37:58Z"
+    },
+    {
+      "id": "ann-muagkt210jfyy",
+      "conv_id": "support-0219",
+      "trace_id": "2be248a66198db6cca075f04bfc5516f",
+      "trace_ids": [
+        "2be248a66198db6cca075f04bfc5516f"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "get_order showed refund_eligible false; agent called issue_refund with amount 0 and reason 'checking eligibility' (rejected as invalid_argument). Then claimed generic return policy' without looking it up it has store overrid  and offered escalation to seek 'an exception",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:39:46Z"
+    },
+    {
+      "id": "ann-muagkva248ldm",
+      "conv_id": "support-0219",
+      "trace_id": "2be248a66198db6cca075f04bfc5516f",
+      "trace_ids": [
+        "2be248a66198db6cca075f04bfc5516f"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[write_tool_used_as_probe] write tool issue_refund called and rejected (not_eligible)",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-write_-0219",
+      "mode": "write_tool_used_as_probe",
+      "batch": "batch3",
+      "created": "2026-09-20T23:39:49Z"
+    },
+    {
+      "id": "ann-muagtteb9drsz",
+      "conv_id": "support-0013",
+      "trace_id": "4baf5605bc0d6568fb08953a0e51719c",
+      "trace_ids": [
+        "4baf5605bc0d6568fb08953a0e51719c"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Shopper asked where their order is. Status (shipped Jun 30) correct, but agent invented a delivery estimate ('within the next few days') and told the shopper to look for a 'shipping notification email' and check spam. The shipping policy says tracking is on the order page; no policy mentions emails. No policy lookup was made.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:46:46Z"
+    },
+    {
+      "id": "ann-muah3y8xbms7l",
+      "conv_id": "support-0068",
+      "trace_id": "64ae37e822bddc82eb446a0505d4e1ab",
+      "trace_ids": [
+        "64ae37e822bddc82eb446a0505d4e1ab"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:54:39Z"
+    },
+    {
+      "id": "ann-muah8vpd8p6wp",
+      "conv_id": "support-0177",
+      "trace_id": "d5460812f104012d837914b610b38c61",
+      "trace_ids": [
+        "d5460812f104012d837914b610b38c61"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "find_order returned 5 orders; reply lists only 4. Order 8002 (the Classic Pencil Set from Atlas Stationery, delivered_at null) was silently dropped — the one order the question was about. Should say the delivery date is missing and escalate",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-20T23:58:29Z"
+    },
+    {
+      "id": "ann-muah9rm05mp9m",
+      "conv_id": "support-0177",
+      "trace_id": "d5460812f104012d837914b610b38c61",
+      "trace_ids": [
+        "d5460812f104012d837914b610b38c61"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[unverified_order_match] find_order returned 5 orders, no get_order, reply names a specific order",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-unveri-0177",
+      "mode": "unverified_order_match",
+      "batch": "batch3",
+      "created": "2026-09-20T23:59:11Z"
+    },
+    {
+      "id": "ann-muahb4lyey5lh",
+      "conv_id": "support-0053",
+      "trace_id": "1f1bfe1210333a76b76e7867903b1217",
+      "trace_ids": [
+        "1f1bfe1210333a76b76e7867903b1217"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T00:00:14Z"
+    },
+    {
+      "id": "ann-muahgrqoj7j18",
+      "conv_id": "support-0238",
+      "trace_id": "64420291cc39418e3dbb06446424b8b7",
+      "trace_ids": [
+        "2ed820cc595d2b5b2131794b8ae7647b",
+        "64420291cc39418e3dbb06446424b8b7"
+      ],
+      "block": "t1.answer",
+      "quote": "",
+      "note": "Rustic Garden Gloves = order 7890, $257.25, above the $100 threshold, so the refund must be queued for human review. Agent said it can 'process the refund right now'. Also picked 7890 out of 4 fuzzy matches without a confirming lookup, and offered 'just the gloves or the entire order' on a 1-item order",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T00:04:37Z"
+    },
+    {
+      "id": "ann-muahgu7791ffb",
+      "conv_id": "support-0238",
+      "trace_id": "2ed820cc595d2b5b2131794b8ae7647b",
+      "trace_ids": [
+        "2ed820cc595d2b5b2131794b8ae7647b",
+        "64420291cc39418e3dbb06446424b8b7"
+      ],
+      "block": "t1.answer",
+      "quote": "",
+      "note": "[unverified_order_match] find_order returned 5 orders, no get_order, reply names a specific order",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-unveri-0238",
+      "mode": "unverified_order_match",
+      "batch": "batch3",
+      "created": "2026-09-21T00:04:41Z"
+    },
+    {
+      "id": "ann-muahnq4gb26dm",
+      "conv_id": "support-0108",
+      "trace_id": "5860f4a8895b890bd9b7f239342629b9",
+      "trace_ids": [
+        "07ada80bcf022285a2239d362f5abe13",
+        "5860f4a8895b890bd9b7f239342629b9"
+      ],
+      "block": "t1.answer",
+      "quote": "",
+      "note": "Only order 3344 is the Handmade Mug; the other two fuzzy matches (products 663, 693, different stores) were presented as 'three mug orders'. All three are refund_eligible false, yet the agent twice offered to 'help you get a refund sorted and the shopper is disputing a delivered-but-not-received order, which ESC-3 sends to a human. The agent never escalated",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T00:10:02Z"
+    },
+    {
+      "id": "ann-muahnxpcmilzj",
+      "conv_id": "support-0108",
+      "trace_id": "07ada80bcf022285a2239d362f5abe13",
+      "trace_ids": [
+        "07ada80bcf022285a2239d362f5abe13",
+        "5860f4a8895b890bd9b7f239342629b9"
+      ],
+      "block": "t1.answer",
+      "quote": "",
+      "note": "[unverified_order_match] find_order returned 3 orders, no get_order, reply names a specific order",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-unveri-0108",
+      "mode": "unverified_order_match",
+      "batch": "batch3",
+      "created": "2026-09-21T00:10:12Z"
+    },
+    {
+      "id": "ann-muahuzpk9hmmv",
+      "conv_id": "support-0110",
+      "trace_id": "cdefd3b4e749fb5acbe84263b5d0cb59",
+      "trace_ids": [
+        "ded7a44fb6e2edd26078d17ac46f1627",
+        "cdefd3b4e749fb5acbe84263b5d0cb59"
+      ],
+      "block": "t1.answer",
+      "quote": "",
+      "note": "User asked about the Travel Mechanical Keyboard from Pocket Arcade (order 6336, $191.75, delivered Feb 10). Agent reported order 7941 (store 16, $41.50, delivered Jun 10) as theirs, with no get_order check, and repeated it in turn 2. Then offered a return/refund for the wrong",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T00:15:41Z"
+    },
+    {
+      "id": "ann-muahv21xvekvp",
+      "conv_id": "support-0110",
+      "trace_id": "ded7a44fb6e2edd26078d17ac46f1627",
+      "trace_ids": [
+        "ded7a44fb6e2edd26078d17ac46f1627",
+        "cdefd3b4e749fb5acbe84263b5d0cb59"
+      ],
+      "block": "t1.answer",
+      "quote": "",
+      "note": "[unverified_order_match] find_order returned 3 orders, no get_order, reply names a specific order",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-unveri-0110",
+      "mode": "unverified_order_match",
+      "batch": "batch3",
+      "created": "2026-09-21T00:15:44Z"
+    },
+    {
+      "id": "ann-muaiwr2q4p3q2",
+      "conv_id": "support-0070",
+      "trace_id": "814b0281c21c0555af10cde74a475794",
+      "trace_ids": [
+        "814b0281c21c0555af10cde74a475794"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Cancellation of order 105 was correct (status placed). But the reply told the shopper 'you should see the refund processed to your original payment method shortly' — cancel_order returned only {ok, cancelled}, and no policy says a cancellation refunds automatically",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T00:45:03Z"
+    },
+    {
+      "id": "ann-muaix16lsi4su",
+      "conv_id": "support-0070",
+      "trace_id": "814b0281c21c0555af10cde74a475794",
+      "trace_ids": [
+        "814b0281c21c0555af10cde74a475794"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[unverified_order_match] find_order returned 2 orders, no get_order, reply names a specific order",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-unveri-0070",
+      "mode": "unverified_order_match",
+      "batch": "batch3",
+      "created": "2026-09-21T00:45:16Z"
+    },
+    {
+      "id": "ann-muajavugbyez2",
+      "conv_id": "support-0005",
+      "trace_id": "ba4f4b7c1852749b328d7a985fde2817",
+      "trace_ids": [
+        "ba4f4b7c1852749b328d7a985fde2817"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "find_order returned 2 orders with store_id only; agent asserted order 2500 is 'from Pocket Arcade' without a confirming lookup (correct by luck). Also dumped 5 order fields for a one-line status question.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T00:56:02Z"
+    },
+    {
+      "id": "ann-muajayizeemii",
+      "conv_id": "support-0005",
+      "trace_id": "ba4f4b7c1852749b328d7a985fde2817",
+      "trace_ids": [
+        "ba4f4b7c1852749b328d7a985fde2817"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "[unverified_order_match] find_order returned 2 orders, no get_order, reply names a specific order",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-unveri-0005",
+      "mode": "unverified_order_match",
+      "batch": "batch3",
+      "created": "2026-09-21T00:56:05Z"
+    },
+    {
+      "id": "ann-muajl1i9nrym8",
+      "conv_id": "support-0244",
+      "trace_id": "e2b49ea665c651c551262cdb7693e7b6",
+      "trace_ids": [
+        "66e4a4ce67a204472a73d8155c2098ab",
+        "e2b49ea665c651c551262cdb7693e7b6"
+      ],
+      "block": "t1.answer",
+      "quote": "",
+      "note": "Order delivered 58 days ago (30-day window) — should be a clear denial. Turn 1 offered escalation for 'more flexibility'; after the shopper pushed ('just make an exception'), the agent escalated and told them a human has 'access to your full account history' and they have 'a real shot at that exception'. No policy supports exceptions, and no tool gives humans account history",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T01:03:56Z"
+    },
+    {
+      "id": "ann-muajon29o54tl",
+      "conv_id": "support-0223",
+      "trace_id": "2558415ad4cfec3de24f1ed38904e504",
+      "trace_ids": [
+        "2558415ad4cfec3de24f1ed38904e504"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Delivered 22 days ago; denied for the wrong reason ('over 30 days have passed' — false). The real reason is Meridian Cycles' 21-day override, which the agent never looked up (told the shopper to check the store page instead) and wrongly suggested might 'extend' the window.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T01:06:44Z"
+    },
+    {
+      "id": "ann-muajs2mzklnzg",
+      "conv_id": "support-0083",
+      "trace_id": "fc9821a34a4b3fb98bcc94d9d65d16cd",
+      "trace_ids": [
+        "fc9821a34a4b3fb98bcc94d9d65d16cd"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Correct summary of the restocking-fee policy, but quoted the internal ID 'cw-restocking-fees' to the shopper.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T01:09:24Z"
+    },
+    {
+      "id": "ann-muajs9ainyaj0",
+      "conv_id": "support-0083",
+      "trace_id": "fc9821a34a4b3fb98bcc94d9d65d16cd",
+      "trace_ids": [
+        "fc9821a34a4b3fb98bcc94d9d65d16cd"
+      ],
+      "block": "t0.answer",
+      "quote": "cw-restocking-fees",
+      "note": "[exposes_internals] reply contains internal identifier 'cw-restocking-fees'",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-expose-0083",
+      "mode": "exposes_internals",
+      "batch": "batch3",
+      "created": "2026-09-21T01:09:33Z"
+    },
+    {
+      "id": "ann-muajykrtt2cwe",
+      "conv_id": "support-0220",
+      "trace_id": "a58bc3a0c6517e0868dd37bbeec92898",
+      "trace_ids": [
+        "a58bc3a0c6517e0868dd37bbeec92898"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "User named product and store (Everyday Granola, Saltbox Pantry). Agent looked up no order and no store policy, asked for an order ID instead, and quoted 'cw-restocking-fees' to the shopper. Saltbox has a 7-day window and the order is on day 7 at $266 (needs human approval) — none of that was found",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T01:14:27Z"
+    },
+    {
+      "id": "ann-muak25exiimcy",
+      "conv_id": "support-0232",
+      "trace_id": "d52205e715fe3d0dd86c90c4db62e26e",
+      "trace_ids": [
+        "d52205e715fe3d0dd86c90c4db62e26e"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Correct to ask which order, but quoted 'cw-returns' to the shopper, told them to check the store's policy page themselves (no override exists), and didn't name the two Blue Heron orders it already had from list_my_orders",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T01:17:14Z"
+    },
+    {
+      "id": "ann-muak2cad7ab6w",
+      "conv_id": "support-0232",
+      "trace_id": "d52205e715fe3d0dd86c90c4db62e26e",
+      "trace_ids": [
+        "d52205e715fe3d0dd86c90c4db62e26e"
+      ],
+      "block": "t0.answer",
+      "quote": "cw-returns",
+      "note": "[exposes_internals] reply contains internal identifier 'cw-returns'",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-expose-0232",
+      "mode": "exposes_internals",
+      "batch": "batch3",
+      "created": "2026-09-21T01:17:23Z"
+    },
+    {
+      "id": "ann-muakb31esyx6q",
+      "conv_id": "support-0188",
+      "trace_id": "c882ffbd5685bf92b663cfad194e0034",
+      "trace_ids": [
+        "c882ffbd5685bf92b663cfad194e0034"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Told the shopper stores 'can't make returns easier than Cartwheel's baseline' — cw-store-overrides says store policy wins whether stricter or looser (Northwind allows 45 days). Also quoted 'cw-returns' to the shopper",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T01:24:11Z"
+    },
+    {
+      "id": "ann-muakcxc67a76p",
+      "conv_id": "support-0188",
+      "trace_id": "c882ffbd5685bf92b663cfad194e0034",
+      "trace_ids": [
+        "c882ffbd5685bf92b663cfad194e0034"
+      ],
+      "block": "t0.answer",
+      "quote": "cw-returns",
+      "note": "[exposes_internals] reply contains internal identifier 'cw-returns'",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-expose-0188",
+      "mode": "exposes_internals",
+      "batch": "batch3",
+      "created": "2026-09-21T01:25:37Z"
+    },
+    {
+      "id": "ann-muaklzpno2r54",
+      "conv_id": "support-0221",
+      "trace_id": "6f19de41c73370a6ce8949d309b8be3e",
+      "trace_ids": [
+        "6f19de41c73370a6ce8949d309b8be3e"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Delivered 9 days ago; agent said it's 'well past' the 30-day window — false. Ineligible only because Saltbox Pantry's window is 7 days, which the agent never looked up (searches returned only platform docs). Quoted 'cw-returns' to the shopper and offered escalation for a defect 'exception",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T01:32:40Z"
+    },
+    {
+      "id": "ann-muakoavleq0jo",
+      "conv_id": "support-0082",
+      "trace_id": "8d816efc986fa4a49b73cc7b76d088f2",
+      "trace_ids": [
+        "8d816efc986fa4a49b73cc7b76d088f2"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "quoted internal id",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch3",
+      "created": "2026-09-21T01:34:28Z"
+    },
+    {
+      "id": "ann-muakoco0x8f6s",
+      "conv_id": "support-0082",
+      "trace_id": "8d816efc986fa4a49b73cc7b76d088f2",
+      "trace_ids": [
+        "8d816efc986fa4a49b73cc7b76d088f2"
+      ],
+      "block": "t0.answer",
+      "quote": "cw-disputes",
+      "note": "[exposes_internals] reply contains internal identifier 'cw-disputes'",
+      "kind": "note",
+      "source": "accepted_suggestion",
+      "suggestion_id": "sg-expose-0082",
+      "mode": "exposes_internals",
+      "batch": "batch3",
+      "created": "2026-09-21T01:34:30Z"
+    },
+    {
+      "id": "ann-muakv3m7qxkh3",
+      "conv_id": "support-0012",
+      "trace_id": "61e1fb278cce294eb4752523efe7de0e",
+      "trace_ids": [
+        "61e1fb278cce294eb4752523efe7de0e"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T01:39:45Z"
+    },
+    {
+      "id": "ann-mual1iwxne9pz",
+      "conv_id": "support-0015",
+      "trace_id": "9ad03039361a12006870c56f9c993f83",
+      "trace_ids": [
+        "9ad03039361a12006870c56f9c993f83"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Shopper asked for tracking. Agent said to check email / spam for a shipping confirmation — no policy mentions emails; cw-shipping says tracking is on the order page. No policy lookup made",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T01:44:45Z"
+    },
+    {
+      "id": "ann-mual5vpfovlrk",
+      "conv_id": "support-0021",
+      "trace_id": "8365fc423711f5edcc121418a2455a3b",
+      "trace_ids": [
+        "8365fc423711f5edcc121418a2455a3b"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "User named the store (Atlas Stationery). find_order returned 2 fuzzy matches; agent called them both 'Slim Pencil Set orders' — order 176 is actually a Slim Dinner Plate Set from Blue Heron Ceramics — and asked the shopper to choose instead of checking store names with get_order.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T01:48:08Z"
+    },
+    {
+      "id": "ann-mual9idy28psv",
+      "conv_id": "support-0022",
+      "trace_id": "6a920e71230643a4271f3ea2be50159a",
+      "trace_ids": [
+        "6a920e71230643a4271f3ea2be50159a"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T01:50:57Z"
+    },
+    {
+      "id": "ann-mualixodawmur",
+      "conv_id": "support-0023",
+      "trace_id": "2de1b7886bbbef2cc2cd6e33b7196279",
+      "trace_ids": [
+        "2de1b7886bbbef2cc2cd6e33b7196279"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "ind_order returned 3 orders; agent asserted the Petal & Stem one without confirming (correct by luck). Quoted 'cw-returns' to the shopper and said \"since it's been sitting in your closet unopened\" — the user never said unopened.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T01:58:17Z"
+    },
+    {
+      "id": "ann-muallnzmxcatr",
+      "conv_id": "support-0059",
+      "trace_id": "446b880fff8e099eb19057a9378a0639",
+      "trace_ids": [
+        "446b880fff8e099eb19057a9378a0639"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "get_order showed refund_eligible false (Saltbox's 7-day window, delivered 22 days ago). Agent never told the shopper it's ineligible, looked up no policy, and escalated immediately — 'they'll process your return if it qualifies'. Denial replaced by a ticket and false hope.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T02:00:24Z"
+    },
+    {
+      "id": "ann-mualpuy3rflqf",
+      "conv_id": "support-0067",
+      "trace_id": "a0352957a11f73f7b5d36bdbf26c02ef",
+      "trace_ids": [
+        "a0352957a11f73f7b5d36bdbf26c02ef"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Cancellation of order 2053 was correct (status placed). Reply then told the shopper to expect 'a refund back to your original payment method within a few business days' — cancel_order returned only {ok, cancelled} and no policy says cancelling refunds automatically. Also picked 2053 from 4 fuzzy matches without a confirming lookup",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T02:03:40Z"
+    },
+    {
+      "id": "ann-mub3xx9bala90",
+      "conv_id": "support-0088",
+      "trace_id": "2efe64bc4d5dc732cebd6928c1dbc8b6",
+      "trace_ids": [
+        "2efe64bc4d5dc732cebd6928c1dbc8b6"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Quoted the internal policy ID 'cw-returns' to the shopper. (Scenario defect: expected answer is Northwind Books' 45-day policy, but the user's message never names a store",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T10:33:49Z"
+    },
+    {
+      "id": "ann-mub408tgjyj9v",
+      "conv_id": "support-0105",
+      "trace_id": "a42d9be9f75443cc9d67d01cbb8dd85a",
+      "trace_ids": [
+        "a42d9be9f75443cc9d67d01cbb8dd85a"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T10:35:38Z"
+    },
+    {
+      "id": "ann-mub41bgbxivbi",
+      "conv_id": "support-0124",
+      "trace_id": "ca5d141684927fbbd1ccf9fdcbe70966",
+      "trace_ids": [
+        "ca5d141684927fbbd1ccf9fdcbe70966"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T10:36:28Z"
+    },
+    {
+      "id": "ann-mub4468esrx61",
+      "conv_id": "support-0126",
+      "trace_id": "9d98613d9dfbb6c004532795f0edebc9",
+      "trace_ids": [
+        "9d98613d9dfbb6c004532795f0edebc9"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T10:38:41Z"
+    },
+    {
+      "id": "ann-mub46czcv9epv",
+      "conv_id": "support-0133",
+      "trace_id": "f6eebd3cd12381904d2e10dd35a89065",
+      "trace_ids": [
+        "f6eebd3cd12381904d2e10dd35a89065"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Merchant asked how to cancel order 6083. Agent called cancel_order immediately with no lookup (no check that the order exists, is in their store, or is pre-shipment) on a $524.50 order, then said the customer will see it 'reflected in their account shortly' — not stated by any tool.",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T10:40:23Z"
+    },
+    {
+      "id": "ann-mub51inr2pz3i",
+      "conv_id": "support-0135",
+      "trace_id": "a27f828f0e9724b211e04afb496864be",
+      "trace_ids": [
+        "a27f828f0e9724b211e04afb496864be"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Answer correct from cw-payouts (weekly Friday runs, 2 business days), but quoted the internal policy ID 'cw-payouts' to the merchant, and inferred 'Monday or Tuesday' clearing without a date source",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T11:04:37Z"
+    },
+    {
+      "id": "ann-mub563q0c5fm0",
+      "conv_id": "support-0141",
+      "trace_id": "3cb360e33c6bffda4c27b9cf6cb08abb",
+      "trace_ids": [
+        "3cb360e33c6bffda4c27b9cf6cb08abb"
+      ],
+      "block": "t0.answer",
+      "quote": "",
+      "note": "Merchant asked for toys under $83 in their store; 22 match. Agent passed store id '12' to a tool that matches store names (error), then searched the store name as a product name with no store filter, got 0, and told the merchant nothing matches — with invented reasons ('might be priced above $83', 'may not be in the catalog') and a request for a 'SKU', which doesn't exist here",
+      "kind": "note",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T11:08:10Z"
+    },
+    {
+      "id": "ann-mub5alhjrgmi8",
+      "conv_id": "support-0151",
+      "trace_id": "828e55bda0a43650efa451195fba738d",
+      "trace_ids": [
+        "828e55bda0a43650efa451195fba738d"
+      ],
+      "block": "conv",
+      "quote": "",
+      "note": "no failure observed",
+      "kind": "no_failure",
+      "source": "human",
+      "batch": "batch4",
+      "created": "2026-09-21T11:11:40Z"
+    }
+  ]
+}
