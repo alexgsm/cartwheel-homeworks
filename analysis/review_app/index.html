@@ -238,7 +238,7 @@ mark.s.hot, .mnote.s.hot { outline-color: var(--sugg); }
 <script>
 "use strict";
 const LANGFUSE = "http://localhost:3000/project/cartwheel-dev/traces/";
-const VIEWS = [["review", "Review"], ["labels", "Labels"], ["taxonomy", "Taxonomy"], ["progress", "Progress"], ["map", "Map"]];
+const VIEWS = [["review", "Review"], ["labels", "Labels"], ["taxonomy", "Taxonomy"], ["progress", "Progress"], ["map", "Map"], ["judge", "Judge"]];
 const CLUSTER_COLORS = ["#2f6fdb", "#1f8a4c", "#c26a12", "#7c4dcc", "#c9302c", "#0f8f8f", "#b5467d", "#6b6b20"];
 
 let DATA = null, BYID = {}, COMMON_PROMPT = "";
@@ -775,10 +775,58 @@ async function addToBatch(name, ids) {
   render();
 }
 
+/* ---------- rendering: judge (HW5) ---------- */
+// Human label, judge verdict and critique side by side. Reads saved predictions only.
+const JV = { data: null, judge: load("jv.judge", null), split: load("jv.split", "dev"), onlyDis: load("jv.onlyDis", true) };
+async function jvLoad(judge) {
+  JV.data = await api("/api/judge" + (judge ? "?judge=" + encodeURIComponent(judge) : ""));
+  JV.judge = JV.data.judge_id;
+}
+function jvSet(k, v) { JV[k] = v; store("jv." + k, v); if (k === "judge") { JV.data = null; } render(); }
+function renderJudge() {
+  if (!JV.data || JV.data.judge_id !== JV.judge) {
+    $("#main").innerHTML = `<div class="card">Loading judge results…</div>`;
+    jvLoad(JV.judge).then(render).catch(e => { $("#main").innerHTML = `<div class="card">Could not load judge results: ${esc(e.message)}</div>`; });
+    return;
+  }
+  const d = JV.data;
+  if (!d.judges.length) { $("#main").innerHTML = `<div class="card">No HW5 judges yet. Run a judge on the dev split first.</div>`; return; }
+  const inSplit = d.rows.filter(r => JV.split === "all" ? r.split !== "train" : r.split === JV.split);
+  const scored = inSplit.filter(r => r.judge && r.human);
+  const c = { tp: 0, fn: 0, tn: 0, fp: 0 };
+  for (const r of scored) {
+    if (r.human === "Pass") r.judge === "Pass" ? c.tp++ : c.fn++;
+    else r.judge === "Fail" ? c.tn++ : c.fp++;
+  }
+  const rate = (a, b) => b ? (a / b).toFixed(2) + ` (${a}/${b})` : "–";
+  const unscored = inSplit.filter(r => !r.judge);
+  const shown = inSplit.filter(r => !JV.onlyDis || r.disagree || !r.judge);
+  const col = v => v === "Pass" ? "#1f8a4c" : v === "Fail" ? "#c9302c" : "inherit";
+  const rowsHtml = shown.map(r => `<tr>
+      <td class="linklist"><span data-open="${esc(r.conv_id)}">${esc(r.conv_id)}</span><br><span class="pill">${esc(r.split)}</span></td>
+      <td><b style="color:${col(r.human)}">${esc(r.human || "–")}</b></td>
+      <td><b style="color:${col(r.judge)}">${esc(r.judge || "no verdict")}</b>${r.disagree ? `<br><span class="pill">${r.human === "Pass" ? "false alarm" : "missed failure"}</span>` : ""}</td>
+      <td style="font-size:13px">${esc(r.critique) || `<span class="pill">${r.judge ? "" : "No valid output from the judge for this trace."}</span>`}
+        ${r.note ? `<div class="pill" style="margin-top:4px">Your note: ${esc(r.note)}</div>` : ""}</td></tr>`).join("");
+  $("#main").innerHTML = `
+  <div class="card"><h2>Judge vs your labels</h2>
+    <div class="actions" style="margin:0 0 8px">
+      <label>Judge <select onchange="jvSet('judge', this.value)">${d.judges.map(j => `<option value="${esc(j.judge_id)}" ${j.judge_id === d.judge_id ? "selected" : ""}>${esc(j.judge_id)}${j.status === "frozen" ? " (frozen)" : ""}</option>`).join("")}</select></label>
+      <label>Split <select onchange="jvSet('split', this.value)">${["dev", "test", "all"].map(s => `<option ${s === JV.split ? "selected" : ""}>${s}</option>`).join("")}</select></label>
+      <label><input type="checkbox" ${JV.onlyDis ? "checked" : ""} onchange="jvSet('onlyDis', this.checked)"> Disagreements only</label>
+    </div>
+    <div>Model <b>${esc(d.model)}</b> · Pass is the positive class ·
+      TPR ${rate(c.tp, c.tp + c.fn)} · TNR ${rate(c.tn, c.tn + c.fp)} ·
+      ${c.fn} false alarms · ${c.fp} missed failures${unscored.length ? ` · <b>${unscored.length} without a verdict</b>` : ""}</div>
+    <p class="pill">Computed from saved predictions in <code>analysis/state/judges/</code>; no model is called. Click a conversation to read it in the Review view.</p>
+  </div>
+  <div class="card"><table class="pt"><tr><th>Conversation</th><th>You</th><th>Judge</th><th>Judge critique</th></tr>${rowsHtml || `<tr><td colspan="4" class="pill">Nothing to show for this filter.</td></tr>`}</table></div>`;
+}
+
 /* ---------- main render ---------- */
 function render() {
   renderTop();
-  ({ review: renderReview, labels: renderLabels, taxonomy: renderTaxonomy, progress: renderProgress, map: renderMap })[ui.view]();
+  ({ review: renderReview, labels: renderLabels, taxonomy: renderTaxonomy, progress: renderProgress, map: renderMap, judge: renderJudge })[ui.view]();
 }
 
 /* ---------- events ---------- */

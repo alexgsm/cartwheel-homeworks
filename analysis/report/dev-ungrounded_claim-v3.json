@@ -1,0 +1,47 @@
+{
+ "prompt_path": "analysis\\prompts\\ungrounded_claim-v3.txt",
+ "judge_id": "ungrounded_claim-v3",
+ "split": "dev",
+ "tpr": 0.0769,
+ "tnr": 1.0,
+ "tpr_interval": [
+  0.0214,
+  0.2414
+ ],
+ "tnr_interval": [
+  0.8318,
+  1.0
+ ],
+ "agreement": 0.4667,
+ "tp": 2,
+ "fn": 24,
+ "tn": 19,
+ "fp": 0,
+ "n": 45,
+ "disagreements": [
+  "0995f09cbe1ac2af60468f66e8ad3aca",
+  "11f18cadf75c5e26f2eb03e56fec5bdd",
+  "1ae3d432a811dbe38ad185f657568de6",
+  "227e5452943ec2ccd13ba63ba3c8d677",
+  "379e2fe5afbf4fc983cefb18298c638b",
+  "446b880fff8e099eb19057a9378a0639",
+  "51b0df160f268bcae7f9d205e6a73c41",
+  "5b7d371772c6da5cddd5dbd9f11008e2",
+  "64ae37e822bddc82eb446a0505d4e1ab",
+  "65bdc150c8f72ad02b9f50ea123e647d",
+  "6a920e71230643a4271f3ea2be50159a",
+  "82fab81b7f077a6747cbb0900fb999e7",
+  "8d816efc986fa4a49b73cc7b76d088f2",
+  "a11355c00443f18cc07646655168440f",
+  "a42d9be9f75443cc9d67d01cbb8dd85a",
+  "a58bc3a0c6517e0868dd37bbeec92898",
+  "aa153840b2d49cfc0d66ca47ddcd5a95",
+  "ba4f4b7c1852749b328d7a985fde2817",
+  "cca374339d761cd0d4ea558d2aba600c",
+  "ce2ce001b31911886a9461f82aeb7707",
+  "d1739983367d374c885baeeb3ba879f7",
+  "d2e20673c5f93ad9d918568853b8ea69",
+  "e6937be6f93a99b1484ebfff8ecd76bf",
+  "fc9821a34a4b3fb98bcc94d9d65d16cd"
+ ]
+}

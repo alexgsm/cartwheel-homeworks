@@ -1,0 +1,57 @@
+[
+ {
+  "trace_id": "d5460812f104012d837914b610b38c61",
+  "conv_id": "support-0177",
+  "reason": "close scenario variant (data_quality_case_id=dq-order-missing-delivery-date); kept support-0176 as the one record for this group"
+ },
+ {
+  "trace_id": "4cbedc4f061dc4a251f24a3f72d63ea7",
+  "conv_id": "support-0178",
+  "reason": "close scenario variant (data_quality_case_id=dq-order-missing-delivery-date); kept support-0176 as the one record for this group"
+ },
+ {
+  "trace_id": "a502df019493f2e9c47b3d331d64d0cd",
+  "conv_id": "support-0179",
+  "reason": "close scenario variant (data_quality_case_id=dq-order-missing-delivery-date); kept support-0176 as the one record for this group"
+ },
+ {
+  "trace_id": "d133a1ed4be47ea07fc427b0ca163178",
+  "conv_id": "support-0180",
+  "reason": "close scenario variant (data_quality_case_id=dq-order-missing-delivery-date); kept support-0176 as the one record for this group"
+ },
+ {
+  "trace_id": "289f88ee490e3f352857c78654a7892b",
+  "conv_id": "support-0185",
+  "reason": "close scenario variant (data_quality_case_id=dq-order-reversed-dates); kept support-0182 as the one record for this group"
+ },
+ {
+  "trace_id": "d7cd03c8a4277e30f6f1529ca2ddfd34",
+  "conv_id": "support-0197",
+  "reason": "close scenario variant (data_quality_case_id=dq-product-invalid-price); kept support-0196 as the one record for this group"
+ },
+ {
+  "trace_id": "a19265a16240c2be0223879c6f6671ba",
+  "conv_id": "support-0199",
+  "reason": "close scenario variant (data_quality_case_id=dq-product-invalid-price); kept support-0196 as the one record for this group"
+ },
+ {
+  "trace_id": "adf98d6658b5b901b8dc4eb35bcf8bfb",
+  "conv_id": "support-0202",
+  "reason": "close scenario variant (data_quality_case_id=dq-product-missing-title); kept support-0201 as the one record for this group"
+ },
+ {
+  "trace_id": "6faa5c4ae684fc29f73c5387f94b2d86",
+  "conv_id": "support-0205",
+  "reason": "close scenario variant (data_quality_case_id=dq-product-missing-title); kept support-0201 as the one record for this group"
+ },
+ {
+  "trace_id": "e2902337a17205dc0ab8410cc02ea241",
+  "conv_id": "support-0217",
+  "reason": "close scenario variant (pair_key=merchant-9014-cancellation); kept support-0216 as the one record for this group"
+ },
+ {
+  "trace_id": "bc85f0472468e83088130c068a9e9996",
+  "conv_id": "support-0209",
+  "reason": "close scenario variant (pair_key=shopper-62-refund); kept support-0208 as the one record for this group"
+ }
+]

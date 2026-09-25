@@ -1,0 +1,24 @@
+{
+  "versions": [
+    {
+      "judge_id": "ungrounded_claim-v0",
+      "prompt_hash": "8815ea2441f4"
+    },
+    {
+      "judge_id": "ungrounded_claim-v1",
+      "prompt_hash": "17527a2fe6b3"
+    },
+    {
+      "judge_id": "ungrounded_claim-v2",
+      "prompt_hash": "0e7f4932f5bc"
+    },
+    {
+      "judge_id": "ungrounded_claim-v3",
+      "prompt_hash": "da7586451854"
+    },
+    {
+      "judge_id": "ungrounded_claim-v4",
+      "prompt_hash": "bc9521a58576"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+ "judge_id": "ungrounded_claim-v3",
+ "split": "test",
+ "model": "gpt-4o-mini",
+ "frozen_at": "2026-09-25T23:14:07.744036+00:00",
+ "class_counts": {
+  "pass": 26,
+  "fail": 19
+ },
+ "scored_on": "44 of 45 test traces",
+ "tp": 2,
+ "fn": 23,
+ "tn": 19,
+ "fp": 0,
+ "n": 44,
+ "tpr": 0.08,
+ "tnr": 1.0,
+ "tpr_interval": [
+  0.0222,
+  0.2497
+ ],
+ "tnr_interval": [
+  0.8318,
+  1.0
+ ],
+ "agreement": 0.4773,
+ "disagreements": [
+  "12e89bcdb9b47ae23cd417198470aa5d",
+  "16b20a310688ce807d8e53fa7fec04d7",
+  "17fd81b827ad6fbb8650121f3bf44592",
+  "29aac2020c57928d429855dc59780477",
+  "2b5cca1b6e34611069dd8e5077fa0f6f",
+  "2efe64bc4d5dc732cebd6928c1dbc8b6",
+  "37b36422aa77866e7b270903cf7c7c3f",
+  "59f47930d4bcfe5cdf74b828d7d1e579",
+  "61e1fb278cce294eb4752523efe7de0e",
+  "8365fc423711f5edcc121418a2455a3b",
+  "91c974875b432fd6a5d4586e8152e011",
+  "9b0d483113ea70a5288358d8e9d2cee2",
+  "9b94fd8a90e4da35e6e29e3e7c18add9",
+  "9d98613d9dfbb6c004532795f0edebc9",
+  "a1917724c8f63c6a27f58094ded0db66",
+  "aaf84d2186a669f506b6e0ca37afa966",
+  "ab18347280fb35617b20cc48731bea6c",
+  "affe760eaba4b53e6a9687556de95d0a",
+  "b2f385a26ce6311dfeb4cd28163c69eb",
+  "c0857013961661c24bd625b95ea3d8de",
+  "ca5d141684927fbbd1ccf9fdcbe70966",
+  "ded7a44fb6e2edd26078d17ac46f1627",
+  "ea9a6ee443c3944d299a5c39ae2d18b5"
+ ],
+ "no_valid_output": {
+  "trace_id": "885ad39534a4442445fe22decaa6bc19",
+  "conv_id": "support-0247",
+  "human_label": "Pass",
+  "why": "DocETL could not parse a Pass/Fail result for this trace on three attempts with the frozen judge; no verdict was invented.",
+  "raw_output": {
+   "result": "Not found",
+   "critique": "The assistant's reply lacks direct information regarding the specific order that the user is referencing. By stating, \"Which one is the item that doesn't match the listing?\" it implies that the assistant needs this information to check refund eligibility, but it fails to address any particular order from the user's historical data. The phrase, \"I can check the refund eligibility and help you get this resolved\" may suggest capabilities but does not directly back up the specific order. There's also a lack of informative support regarding refund eligibility based on the order listed. This situati"
+  }
+ },
+ "bounds_if_the_missing_trace_is_counted": {
+  "if_judge_had_agreed": {
+   "tpr": 0.1154,
+   "tnr": 1.0,
+   "tpr_interval": [
+    0.04,
+    0.2898
+   ],
+   "tnr_interval": [
+    0.8318,
+    1.0
+   ]
+  },
+  "if_judge_had_disagreed": {
+   "tpr": 0.0769,
+   "tnr": 1.0,
+   "tpr_interval": [
+    0.0214,
+    0.2414
+   ],
+   "tnr_interval": [
+    0.8318,
+    1.0
+   ]
+  }
+ }
+}

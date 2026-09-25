@@ -58,6 +58,47 @@ from analysis.helpers._state import (  # noqa: E402
     write_json,
 )
 
+def _judge_view(judge_id: str | None) -> dict[str, Any]:
+    """Human label, judge verdict and critique side by side, for the Judge tab.
+
+    Reads only saved files (HW5 labels, splits, judge records); never calls a model.
+    Labels and predictions both use Pass = 1. A split's predictions appear only if
+    that split has been run, so test rows stay empty until the judge is frozen and
+    tested.
+    """
+    judges_dir = state_path("judges")
+    records = {}
+    for p in sorted(judges_dir.glob("*-v*.json")):
+        rec = read_json(p, {})
+        has_labels = state_path("hw5_labels", f"{rec.get('mode')}.jsonl").exists()
+        if rec.get("judge_id") and rec.get("label_convention") == "pass_positive" and has_labels:
+            records[rec["judge_id"]] = rec
+    if not records:
+        return {"judges": [], "rows": []}
+    frozen = [j for j, r in records.items() if r.get("status") == "frozen"]
+    judge_id = judge_id if judge_id in records else (frozen[0] if frozen else sorted(records)[-1])
+    rec = records[judge_id]
+    mode = rec["mode"]
+    labels = {r["trace_id"]: r for r in read_jsonl(state_path("hw5_labels", f"{mode}.jsonl"))}
+    splits = read_json(state_path("splits.json"), {}).get(mode, {})
+    preds = rec.get("predictions", {}).get(rec["prompt_hash"], {})
+    crits = rec.get("critiques", {}).get(rec["prompt_hash"], {})
+    rows = []
+    for split in ("train", "dev", "test"):
+        for tid in splits.get(split, []):
+            lab = labels.get(tid, {})
+            human = "Pass" if lab.get("label") == 1 else "Fail" if lab.get("label") == 0 else None
+            judge = None if tid not in preds else ("Pass" if int(preds[tid]) == 1 else "Fail")
+            rows.append({
+                "trace_id": tid, "conv_id": lab.get("conv_id"), "split": split,
+                "human": human, "judge": judge, "critique": crits.get(tid, ""),
+                "note": lab.get("note", ""), "disagree": judge is not None and human is not None and judge != human,
+            })
+    judges = [{"judge_id": j, "status": r.get("status"), "model": r.get("model")} for j, r in sorted(records.items())]
+    return {"judge_id": judge_id, "status": rec.get("status"), "model": rec.get("model"),
+            "mode": mode, "judges": judges, "rows": rows}
+
+
 APP_DIR = Path(__file__).resolve().parent
 DATA_FILE = APP_DIR / "data" / "conversations.json"
 
@@ -208,6 +249,11 @@ class Handler(BaseHTTPRequestHandler):
             # agent-proposed labels derived from open codes; never saved as labels
             # until the reviewer accepts them in the Labels view
             self._json(read_json(state_path("proposed_labels.json"), {}))
+        elif path == "/api/judge":
+            from urllib.parse import parse_qs, urlparse
+
+            query = parse_qs(urlparse(self.path).query)
+            self._json(_judge_view(query.get("judge", [None])[0]))
         else:
             self._json({"error": "not found"}, 404)
 
