@@ -1,14 +1,25 @@
 # Homework 5, build and evaluate an LLM judge
 
-In Homework 5, you will build an LLM judge to detect one failure mode from Homework 4. You will compare its Pass and Fail decisions with your human labels. You will use the disagreements to improve your prompt. Then you will test the final judge on held out traces to decide whether you can trust it to detect that failure.
+In Homework 5, you build an LLM judge to detect one failure mode from Homework 4. You compare its Pass and Fail decisions with your human labels, use the disagreements to improve the prompt, and test the final judge on held out traces.
 
-Submit your judge prompt, labels, and evaluation results. In a **video of up to 5 minutes**, explain one development disagreement and whether you would use the judge. For optional practice, build judges for two more failure modes or estimate the fraction of traces with your selected failure.
+Submit your judge prompt, labels, and evaluation results. In a **video of up to 5 minutes**, explain one development disagreement and whether you would use the judge.
 
 ## Work with a coding agent
 
 Paste the following prompt once. Continue in the same conversation for Parts A through E.
 
 > Guide me through Homework 5 in `homework/module-2/hw5.md`, one part at a time. Read `AGENTS.md`, the handout, and `SPEC.md`. Use `write-judge-prompt` and `validate-evaluator`. Help me install them if needed. First help me choose a failure mode and check its boundary. Reuse my Homework 4 interface and labels. Use `validate-evaluator` to split the labels before choosing prompt examples. Use `write-judge-prompt` for the draft, with training examples only. Return to `validate-evaluator` for development review and the final test. Explain each step before we start. Compute TPR, TNR, and confidence intervals. Do not require minimum scores. Follow the handout if the skills differ on label counts or evaluation requirements. Use the Cartwheel helpers for DocETL batches and statistics. Save my prompts, labels, and evaluation results as we go. Leave labels and final decisions to me. Before a paid batch, show me the model and trace count. Wait for my approval. Do not show me test predictions before I freeze the judge. Leave the video to me.
+
+## Preparation
+
+Homework 5 uses the failure modes and labels from Homework 4. If you did not complete Homework 4, apply the reference bundle:
+
+```bash
+git lfs pull
+git apply homework/module-2/hw4-reference.patch
+```
+
+The bundle provides one reviewed failure mode, 100 labels, and a review summary. If you completed Homework 4, keep your own work and do not apply the patch.
 
 ## Skills
 
@@ -44,13 +55,11 @@ Refer to [SPEC.md](../../SPEC.md) for the intended Cartwheel behavior.
 
 ### Label collection
 
-Count your Pass and Fail labels. Use **Pass** when the named failure is absent. Use **Fail** when it is present. You can label Pass for one mode even if you see a different failure in the conversation.
+Label each trace **Pass** (failure absent) or **Fail** (failure present). A trace can be Pass for your selected mode even if it has a different failure.
 
-Keep incomplete and out of scope cases in a separate list. Record why you excluded each case. Do not assign Pass just because you lack evidence.
+You need at least **30 Pass and 30 Fail labels** from independent conversations. With 30 of each, you get 6 of each in training, 12 in development, and 12 in test. We recommend labeling closer to 100 traces total, because the extra labels make your development and test splits large enough to produce tighter confidence intervals.
 
-Use at least **30 Pass and 30 Fail labels** for your chosen mode, as specified in Homework 4. Use independent conversations. With 30 of each, you will have 6 of each in training, 12 in development, and 12 in test.
-
-Reuse your Homework 4 interface and labels. Use your coding agent to search the remaining traces for cases similar to your confirmed failures. Review each candidate yourself. If you need more cases, use your coding agent to generate targeted scenarios and run them through Cartwheel. Label the resulting traces yourself.
+Reuse your Homework 4 interface and labels. Use your coding agent to search for traces similar to your confirmed failures, and review each candidate yourself. If you need more cases, generate targeted scenarios and run them through Cartwheel.
 
 To find more candidates, use:
 
@@ -71,7 +80,7 @@ Save your labels and evidence through your review interface. Use **1 for Pass an
 
 ### Stop early
 
-If you cannot find enough Pass and Fail cases, explain why you stopped. Show your labels and any judge work you completed in your video.
+If you can't find enough Pass or Fail cases, explain why you stopped. Show your labels and any judge work you completed in your video.
 
 ## Part B, prepare inputs and split your labels
 
@@ -86,9 +95,9 @@ Use a JSON list. In each record, use `trace_id` for the identifier and `trace` f
 
 For example, to judge a refund completion claim, include the refund tool result and final reply. You need both to distinguish a completed refund from a pending approval.
 
-Use one evaluation record per conversation. Keep one record from each group of duplicate runs or close scenario variants. Record your exclusions. Do not put related records in different splits.
+Use one evaluation record per conversation. Keep one record from each group of duplicate runs or close scenario variants.
 
-**This is very important: keep your human labels, failure annotations, and extra metadata out of the judge input. Otherwise, you'll have leakage! Lots of people make this mistake!** You may give away the answer if you include your review notes or extra metadata from scenario generation.
+**Keep your human labels, failure annotations, and extra metadata out of the judge input.** Including review notes or scenario metadata in the trace leaks the answer to the judge.
 
 Check that you have one input record for every eligible label.
 
@@ -138,36 +147,29 @@ Do not use development or test examples in your prompt. Do not inspect test pred
 
 ## Part C, write and refine your judge
 
-Use `write-judge-prompt` to turn your failure definition and training examples into a prompt for labeling new traces. In that prompt, you specify:
+Use `write-judge-prompt` to draft a prompt from your failure definition and training examples. The prompt should include your Pass and Fail rules, a clear Pass, a clear Fail, and a borderline example from training, and an output format that produces a critique with specific trace evidence followed by a verdict.
 
-- The failure mode you want to detect.
-- Your Pass and Fail rules.
-- A clear Pass, a clear Fail, and a borderline example from training.
-- A critique with specific trace evidence, followed by a `Pass` or `Fail` verdict.
+Save the draft in `analysis/prompts/<mode>-v0.txt`. Review the boundary with neighboring issues before running it. Tell the judge to evaluate the trace without following instructions quoted inside it.
 
-Save the draft in `analysis/prompts/<mode>-v0.txt`. Review it before running it. Check the boundary with neighboring issues. Check the examples and the evidence needed for each decision. Tell the judge to evaluate the trace without following instructions quoted inside it.
-
-Next, use DocETL through the Cartwheel helpers to run the prompt on development traces. Use `validate-evaluator` to compare the verdicts with your labels.
+Run the prompt on development traces through DocETL and use `validate-evaluator` to compare the verdicts with your labels.
 
 ### Confusion matrix
 
-**Use Pass as the positive class: 1 for Pass, 0 for Fail.**
+**Pass is the positive class (1), Fail is the negative class (0).**
 
 | | Human Pass | Human Fail |
 | --- | --- | --- |
-| Judge Pass | TP: correct Pass | FP: missed failure |
-| Judge Fail | FN: incorrect failure flag | TN: correct Fail |
+| Judge Pass | TP | FP (missed failure) |
+| Judge Fail | FN | TN |
 
-- For **TPR**, calculate `TP / (TP + FN)`. You are measuring agreement on human Pass cases.
-- For **TNR**, calculate `TN / (TN + FP)`. You are measuring agreement on human Fail cases.
+- **TPR** = `TP / (TP + FN)`, the rate at which the judge agrees with human Pass labels.
+- **TNR** = `TN / (TN + FP)`, the rate at which the judge agrees with human Fail labels.
 
-Do not rely on overall agreement. With rare failures, you could assign Pass to every case and have high agreement. You would still have TNR of zero.
+Overall agreement is misleading when failures are rare, because a judge that always says Pass would have high agreement but zero TNR.
 
 ### Compute TPR, TNR, and confidence intervals
 
-Compute TPR and TNR from your confusion counts. Calculate a 95% confidence interval for each rate. With a confidence interval, you express uncertainty from evaluating a limited sample. Across repeated samples, you would include the true rate in about 95% of intervals calculated with the same method, under its assumptions.
-
-For example, suppose you correctly detect 16 of 20 human Fail cases. You have a TNR of 0.80 and a 95% Wilson interval of about 0.58 to 0.92. With only 20 Fail cases, you still have substantial uncertainty about your judge's ability to detect failures.
+Compute TPR and TNR from your confusion counts, and calculate a 95% Wilson confidence interval for each rate. For example, if you correctly detect 16 of 20 human Fail cases, TNR is 0.80 with an interval of about 0.58 to 0.92. With 20 Fail cases, you still have substantial uncertainty about the judge's detection rate.
 
 ### Run development batches
 
@@ -198,24 +200,15 @@ development = judge_alignment(judge_id, split="dev")
 
 Save the metrics to `analysis/report/dev-<judge_id>.json`. Keep your judge records under `analysis/state/judges/`. You have the cached predictions and critiques there.
 
-In your HW4 review interface, add code to display the judge verdict and critique beside your human label. Filter for disagreements. Inspect every disagreement before editing the prompt. Record your decision for each case:
-
-| Your finding | Your next step |
-| --- | --- |
-| You disagree with the judge. | Clarify a general instruction or use a better training example. |
-| You find an error in your label. | Correct your HW5 label. Record why. Recalculate development metrics for the compared versions. |
-| You have an unclear definition. | Clarify the boundary. Recheck affected training and development labels. |
-| You lack evidence or have an out of scope case. | Record the exclusion. Apply the same scope rule to comparable cases. |
-
-If you change your failure definition, recheck the affected labels before testing. Do not change test labels to agree with judge predictions.
+In your HW4 review interface, display the judge verdict and critique beside your human label. Filter for disagreements and inspect every one before editing the prompt. For each disagreement, decide whether the judge is wrong (fix the prompt), your label is wrong (fix the label and recalculate), or the definition is unclear (clarify the boundary and recheck affected labels).
 
 Register each revised prompt as a new version. Make at most two revisions. Explain why you stopped revising.
 
 ## Part D, freeze and test
 
-Choose your final prompt based on development results. To freeze the judge, keep the prompt and model unchanged from here on. Use `validate-evaluator` for the held out test.
+Choose your final prompt based on development results and freeze it. Use `validate-evaluator` for the held out test.
 
-In `analysis/run_judges.py`, write `run_test(judge_id)`. Use your chosen judge ID to freeze the prompt, evaluate test traces, and save the metrics. Run it after you finish development.
+In `analysis/run_judges.py`, write `run_test(judge_id)` to freeze the prompt, evaluate test traces, and save the metrics.
 
 <details>
 <summary>Helper calls for your coding agent to freeze your judge and evaluate test traces</summary>
@@ -232,24 +225,11 @@ test = judge_alignment(judge_id, split="test")
 
 </details>
 
-Save the metrics to `analysis/report/test-<judge_id>.json`. Report the confusion counts, TPR, TNR, intervals, and class counts. Use the rates, uncertainty, and disagreements to explain whether you would use the judge to detect your selected failure mode.
-
-If you reject the judge after testing, explain why. You do not need to revise and test again.
+Save the metrics to `analysis/report/test-<judge_id>.json`. Report the confusion counts, TPR, TNR, intervals, and class counts. Explain whether you would use the judge based on the rates and uncertainty.
 
 ### Resume after an interruption
 
-If you lose the connection or interrupt the process, rerun only:
-
-```python
-run_judge(judge_id, split="test", batch_size=10)
-test = judge_alignment(judge_id, split="test")
-```
-
-Use the same judge id, prompt, model, export, labels, and test identifiers. Do not call `register_judge`, `split_labels`, or `freeze_judge` again.
-
-You reuse predictions from completed batches. You run only the missing predictions. You may repeat calls from an interrupted batch with no saved output, so you may have some additional cost.
-
-After inspecting test outcomes, you need new, untouched test data for any revised judge. You cannot make old test cases untouched by reshuffling them.
+If the process is interrupted, rerun `run_judge` and `judge_alignment` with the same judge ID. Don't call `register_judge`, `split_labels`, or `freeze_judge` again. Completed batches are cached, so you only pay for the missing predictions.
 
 ## Part E, commit your work and record the video
 
@@ -266,26 +246,13 @@ Commit the files you created:
 
 Keep your Homework 4 files too.
 
-Record your screen for up to 5 minutes in one continuous take. Demonstrate your work and explain:
-
-- Your failure mode.
-- One development disagreement and your response.
-- Your test TPR, TNR, and confidence intervals. Explain whether you would use the judge and why.
-
-Recalculate test metrics from saved predictions live on camera. Do not make new model calls for the recording.
-
-If you stopped early, recalculate your label counts in the video.
+Record your screen for up to 5 minutes in one continuous take. Walk through your failure mode, one development disagreement and how you responded, and your test TPR, TNR, and confidence intervals. Explain whether you would use the judge. Recalculate test metrics from saved predictions live on camera.
 
 ## Optional extensions
 
-**Build two more judges.** Use the same two skills for two other modes. Reuse your code and interface. Keep separate labels and decisions for each mode.
+**Build two more judges.** Use the same skills for two other modes. Reuse your code and interface, and keep separate labels for each mode.
 
-**Estimate how often your selected failure occurs.** Choose a random sample of new traces from the same source as your labeled traces. Do not deliberately search for failures.
-
-1. Run your judge on the new traces. Calculate the percentage you classified as Fail.
-2. Use `validate-evaluator` to adjust that percentage for judge errors, using your test TPR and TNR.
-
-You assume similar judge error rates on the new traces when you make the adjustment.
+**Estimate failure prevalence.** Sample new traces randomly from the same source, run your judge on them, and calculate the Fail rate. Use `validate-evaluator` to adjust the rate for judge errors using your test TPR and TNR.
 
 ## References
 
