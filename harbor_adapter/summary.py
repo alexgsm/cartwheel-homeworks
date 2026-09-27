@@ -17,6 +17,26 @@ def _case_id(task_name: str, known_ids: set[str]) -> str | None:
     return max(matches, key=len) if matches else None
 
 
+def load_trial_results(job_dir: Path, result: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return the job's trial results, in the order the trials started.
+
+    Older Harbor jobs embed ``trial_results`` in the job-level ``result.json``.
+    Harbor 0.23.0 writes that file with ``exclude_trial_results=True``, so the
+    list is absent and each trial's result lives in ``<job>/<trial>/result.json``.
+    Read those instead, ordered by ``started_at`` (then trial name) so the order
+    is reproducible for the trial-count analysis.
+    """
+    embedded = result.get("trial_results")
+    if embedded:
+        return list(embedded)
+    trials = []
+    for path in sorted(job_dir.glob("*/result.json")):
+        trial = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(trial, dict) and "trial_name" in trial:
+            trials.append(trial)
+    return sorted(trials, key=lambda t: (str(t.get("started_at") or ""), str(t.get("trial_name"))))
+
+
 def _reward(trial: dict[str, Any]) -> float | None:
     verifier = trial.get("verifier_result")
     if not isinstance(verifier, dict):
@@ -49,7 +69,7 @@ def summarize_job(
     result = json.loads(result_path.read_text())
     trials: dict[str, list[dict[str, Any]]] = defaultdict(list)
     unknown: list[str] = []
-    for trial in result.get("trial_results", []):
+    for trial in load_trial_results(job_dir, result):
         case_id = _case_id(str(trial.get("task_name", "")), set(by_id))
         if case_id is None:
             unknown.append(str(trial.get("task_name", "")))
