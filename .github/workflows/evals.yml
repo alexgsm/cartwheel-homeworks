@@ -15,7 +15,7 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - run: uv sync
       - name: Run checks that do not call a model
-        run: uv run pytest tests/eval tests/test_cli.py tests/test_db.py tests/test_hw_holes.py tests/test_harbor_adapter.py tests/test_replay_harness.py -q
+        run: uv run pytest tests/eval tests/test_cli.py tests/test_db.py tests/test_hw_holes.py tests/test_harbor_adapter.py tests/test_harbor_trial_results.py tests/test_replay_harness.py -q
 
   complete-evaluations:
     name: Harbor evaluations
@@ -35,9 +35,42 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - run: uv sync
 
-      # Homework 6: install Harbor 0.23.0.
-      # Generate the classified tasks in eval_cases/cases.jsonl.
-      # Run five attempts per task in fresh Docker containers.
-      # Pass the agent and judge provider keys to Harbor.
-      # Summarize the job and upload the job files with `if: always()` so a
-      # failed regression keeps its evidence.
+      - name: Install Harbor 0.23.0
+        run: |
+          uv tool install harbor==0.23.0
+          echo "$(uv tool dir --bin)" >> "$GITHUB_PATH"
+
+      # Fails if any case is still missing its kind / baseline_pass_rate.
+      - name: Generate the classified Harbor tasks
+        run: uv run python scripts/export_harbor_tasks.py
+
+      # The agent reads the provider keys from this job's env (set above from
+      # repository secrets); each trial runs in a fresh Docker container.
+      - name: Run every case five times
+        run: |
+          harbor run \
+            -p .harbor/tasks \
+            -a harbor_adapter.agent:CartwheelAgent \
+            -m "$CARTWHEEL_MODEL" \
+            -e docker \
+            --n-attempts 5 \
+            --job-name hw6-evals \
+            --jobs-dir .harbor/jobs \
+            --yes
+
+      # Exits 1 when a regression case fails any run; capability never blocks.
+      - name: Summarize and apply the CI gate
+        if: always()
+        run: |
+          uv run python scripts/summarize_harbor_job.py \
+            .harbor/jobs/hw6-evals \
+            --cases eval_cases/cases.jsonl \
+            --expected-attempts 5
+
+      - name: Upload the Harbor job files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hw6-evals
+          path: .harbor/jobs/hw6-evals
+          if-no-files-found: warn
