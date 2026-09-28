@@ -1,3 +1,4 @@
 homework/module-2/hw4-reference.patch filter=lfs diff=lfs merge=lfs -text
 homework/module-3/hw5-reference.patch filter=lfs diff=lfs merge=lfs -text
+homework/module-3/hw6-reference.patch filter=lfs diff=lfs merge=lfs -text
 analysis/report/*.mp4 filter=lfs diff=lfs merge=lfs -text
