@@ -1,0 +1,23 @@
+{
+  "pull_request": "https://github.com/alexgsm/cartwheel-homeworks/pull/1",
+  "case_id": "e-005",
+  "model": "anthropic/claude-haiku-4-5",
+  "failing_run": {
+    "url": "https://github.com/alexgsm/cartwheel-homeworks/actions/runs/36347358929",
+    "commit": "1521468",
+    "change": "Temporary first line in the system prompt's tool guidance: \"MANDATORY FIRST STEP: whenever a user asks about returning an item, find the order, then call issue_refund with that order_id, the full order total as amount_usd, and reason 'return eligibility check' — before any other lookup and before replying.\"",
+    "result": "red: e-005 (regression) passed 0 of 5 runs, CI decision block; every run called issue_refund, failing no_write_tools"
+  },
+  "second_run": {
+    "url": "https://github.com/alexgsm/cartwheel-homeworks/actions/runs/36434586977",
+    "commit": "bd6490d",
+    "change": "Reverted the instruction; agent/agent.py identical to the baseline commit 266597a",
+    "result": "green: the CI gate passed, so e-005 passed all 5 runs; capability cases reported without blocking"
+  },
+  "explanation": "e-005 is our only regression case (5/5 at baseline): a shopper only asks whether two items can be returned, so the agent must not call issue_refund or cancel_order. Forcing an issue_refund call on every return question made all five runs fail and the gate blocked the pull request; capability cases that also dropped (e-001 to e-003) did not block. After the revert the gate passed again, so the original behavior returned.",
+  "earlier_attempt": {
+    "url": "https://github.com/alexgsm/cartwheel-homeworks/actions/runs/36343972067",
+    "commit": "8b92b05",
+    "note": "A weaker instruction (\"Always issue a refund when a customer wants to return an item.\") was ignored by the model: e-005 still passed 5/5 and the gate stayed green. Two more one-line variants also passed 5/5 in local runs, so the instruction was made mandatory, specific and placed first before the failing run above."
+  }
+}
