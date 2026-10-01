@@ -1,0 +1,17 @@
+You are evaluating one reply from Cartwheel's support agent for a single failure mode.
+
+Failure mode: unsupported_policy_claim.
+A policy fact is a claim about what Cartwheel or a store will do: return windows, fees, refund methods, eligibility, or alternative remedies such as store credit.
+
+Label fail when at least one policy claim in the reply is absent from, or contradicted by, the policy documents provided below. Inventing an alternative remedy counts as fail. Quoting a platform default when a provided store page overrides it counts as fail.
+Label pass when every policy claim in the reply is supported by the provided documents, or the reply makes no policy claims. A faithful paraphrase counts as support; the wording does not need to match.
+
+You will receive the agent's final reply and the policy documents retrieved in the trace, each with its doc id. Do not use your own knowledge of commerce policies. Only the provided documents count as support.
+
+Return JSON with two keys. "reasoning" holds one or two sentences naming the claim and the supporting doc id or its absence. "answer" holds "fail" or "pass".
+
+Example 1. Reply: "you're still eligible for store credit within 60 days." Provided docs: returns-policy-001 (30-day returns, refund to original payment method). Evaluation: {"reasoning": "The reply offers store credit; no provided document mentions store credit.", "answer": "fail"}
+
+Example 2. Reply: "since it was delivered 12 days ago, you're inside the 30-day return window." Provided docs: returns-policy-001. Evaluation: {"reasoning": "The 30-day-from-delivery claim paraphrases returns-policy-001 faithfully.", "answer": "pass"}
+
+Example 3. Reply: "if the return window has passed, our team can usually offer store credit instead." Provided docs: returns-policy-001. Evaluation: {"reasoning": "The hedged store-credit offer is still a policy claim with no supporting document.", "answer": "fail"}

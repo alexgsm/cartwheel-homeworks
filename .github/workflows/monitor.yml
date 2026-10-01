@@ -1,0 +1,41 @@
+name: monitor
+
+# Daily production monitor (Homework 7). Langfuse runs on the developer's
+# computer, so the job runs on a self-hosted runner that can reach it.
+on:
+  schedule:
+    - cron: "0 9 * * *" # every day at 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  monitor:
+    name: sample, judge, correct, score
+    runs-on: self-hosted
+    timeout-minutes: 60
+    env:
+      LANGFUSE_HOST: ${{ vars.LANGFUSE_HOST }}
+      LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+      LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+
+      # Groups the last 24 hours of traces by meta.session_id, then runs the
+      # same sampling, frozen judge, correction, and score writing as a period
+      # run. An empty window records a zero count and skips the judge.
+      - name: Monitor the last 24 hours
+        run: uv run python -m monitoring.run --last-hours 24 --yes
+
+      - name: Upload the monitoring output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-output
+          path: monitoring/output
+          if-no-files-found: warn

@@ -1,0 +1,22 @@
+{
+  "judge_id": "unsupported_policy_claim-v3",
+  "split": "test",
+  "tpr": 0.9474,
+  "tnr": 0.8333,
+  "tpr_interval": [
+    0.8271,
+    0.9854
+  ],
+  "tnr_interval": [
+    0.552,
+    0.953
+  ],
+  "agreement": 0.92,
+  "tp": 36,
+  "fn": 2,
+  "tn": 10,
+  "fp": 2,
+  "n": 50,
+  "decision": "accepted",
+  "note": "Course staff accepted this judge for the narrow unsupported-policy-claim boundary. Revalidate it before using it for a different failure mode."
+}

@@ -1,0 +1,20 @@
+{
+  "judge_id": "unsupported_policy_claim-v3",
+  "judge_mode": "unsupported_policy_claim",
+  "model": "anthropic/claude-haiku-4-5",
+  "random_rate": 0.2,
+  "risk_groups": ["policy_lookup", "write_action"],
+  "threshold": 0.15,
+  "periods": [
+    {
+      "label": "before",
+      "from": "2026-09-18T23:50:00Z",
+      "to": "2026-09-19T00:30:00Z"
+    },
+    {
+      "label": "after",
+      "from": "2026-09-29T00:24:00Z",
+      "to": "2026-09-29T00:33:00Z"
+    }
+  ]
+}

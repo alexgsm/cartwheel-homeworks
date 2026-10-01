@@ -70,14 +70,42 @@ def build_score_records(
         A list of score record dicts with keys: score_id, name, value,
         data_type, trace_id, comment (comment is None for verdicts).
     """
-    ### YOUR CODE HERE (hw7)
-    raise NotImplementedError("hw7: implement build_score_records")
+    records: list[dict[str, Any]] = []
+    for kind, verdicts in (("verdict", random_verdicts), ("risk_verdict", risk_verdicts)):
+        for trace_id, verdict in verdicts.items():
+            records.append(
+                {
+                    "score_id": _stable_id(mode, kind, trace_id),
+                    "name": f"{mode}_{kind}",
+                    "value": float(verdict),
+                    "data_type": "NUMERIC",
+                    "trace_id": trace_id,
+                    "comment": None,
+                }
+            )
+    records.append(
+        {
+            "score_id": _stable_id(mode, "prevalence", batch_label),
+            "name": f"{mode}_corrected_prevalence",
+            "value": estimate["corrected"],
+            "data_type": "NUMERIC",
+            "trace_id": None,
+            "comment": (
+                f"95% CI {estimate['ci_low']}-{estimate['ci_high']}, "
+                f"raw {estimate['raw']}, n={estimate['n_sample']}"
+            ),
+        }
+    )
+    return records
 
 
 # ---------------------------------------------------------------------------
 # The POST wiring (instructor-provided). Gated on the LANGFUSE_* env vars the
 # same way analysis/helpers/langfuse_io.py is, so nothing here runs offline.
 # ---------------------------------------------------------------------------
+
+
+MONITOR_SESSION_ID = "hw7-monitor"
 
 
 def post_scores(records: list[dict[str, Any]]) -> int:
@@ -105,6 +133,13 @@ def post_scores(records: list[dict[str, Any]]) -> int:
         }
         if record.get("trace_id") is not None:
             kwargs["trace_id"] = record["trace_id"]
+        else:
+            # Langfuse 3.x rejects a score with no trace, session, or dataset
+            # run ("Provide exactly one of ..."), so the period-level score is
+            # attached to a fixed monitoring session instead.
+            kwargs["session_id"] = MONITOR_SESSION_ID
+        if record.get("timestamp") is not None:
+            kwargs["timestamp"] = record["timestamp"]
         if record.get("comment"):
             kwargs["comment"] = record["comment"]
         client.create_score(**kwargs)

@@ -26,3 +26,6 @@ scenarios/demo_pilot_gt.json
 
 # review app derived data (rebuild with analysis/review_app/build_data.py)
 analysis/review_app/data/
+
+# HW7 local monitor output (uploaded as a workflow artifact instead)
+monitoring/output/
