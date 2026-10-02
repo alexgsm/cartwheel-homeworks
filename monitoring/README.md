@@ -13,7 +13,9 @@
   - after: a new run, 2026-09-29 00:24 to 00:33 UTC (54 traces, 50 conversations).
 - **Sampling:** a random 20% (10 conversations) for the estimate, plus every conversation in the
   `policy_lookup` and `write_action` risk groups for inspection.
-- **Threshold:** 0.15, chosen before I looked at any judge result.
+- **Threshold:** 0.15, chosen before I looked at any judge result. About 1 in 7 conversations with an invented
+  policy promise is too risky for customers. With only 10 random conversations per period, a lower line would
+  raise too many false alarms.
 
 ## Results
 
@@ -32,12 +34,16 @@ Chart: `prevalence.svg`. History: `history.jsonl`.
 ## 1. Did the corrected failure estimate move between the two periods?
 
 Yes, a little. The corrected estimate went from 0.32 to 0.44. The difference is one conversation: 3 of 10 flagged
-before and 4 of 10 after. The agent, prompt and model did not change between the periods.
+before and 4 of 10 after. The agent, prompt and model did not change between the periods. The sampler uses a fixed
+seed over the scenarios in the same order, so both periods sampled the same 10 scenarios. Scenarios 0072, 0074 and
+0162 were flagged in both periods, and 0174 was flagged only in the after period. The whole change is 0174.
+If that one conversation had gone the other way, both periods would show the same raw rate (0.30).
 
 ## 2. Do the intervals support a conclusion, or is the result uncertain?
 
-The result is uncertain. The intervals overlap almost completely (0.00 to 0.76 and 0.06 to 0.93). Any true rate
-between about 0.06 and 0.76 fits both periods, so the change could be sampling luck. The intervals are wide
+The result is uncertain. The difference is one conversation (see answer 1), and the intervals overlap almost
+completely (0.00 to 0.76 and 0.06 to 0.93). Any true rate between about 0.06 and 0.76 fits both periods, so the
+change could easily be luck. The intervals are wide
 because only 10 random conversations were judged in each period, and because the judge's accuracy was measured on
 only 50 labeled conversations. To detect a real change, the random sample needs to be larger (a higher
 `random_rate`), which costs more judge calls.
@@ -48,14 +54,16 @@ The random sample only gives an uncertain overall rate. The risk groups give spe
 The most important are the write-action conversations, where the agent issued a refund or cancelled an order while
 making an unsupported policy claim: 0133 and 0236 before, 0242 after. These are the most expensive mistakes for a
 customer. Policy-lookup conversations were flagged at about the same rate as the random sample, so the failure is
-not concentrated there. The flagged conversations differ between the periods, so the failure is not tied to a few
-fixed scenarios.
+not concentrated there. The risk-group flags changed between the periods (for example 0236 before and 0242 after),
+so the same customer request can pass in one run and fail in another. In the random sample, 0072, 0074 and 0162
+failed in both periods. These consistent failures are the clearest place to start error analysis.
 
 ## 4. What action should happen if the estimate crosses the threshold?
 
 Both periods are above 0.15, so error analysis should start now:
 
-1. Read the flagged traces, starting with the write-action ones, and confirm each flag by hand. The judge can be wrong.
+1. Read the flagged traces, starting with the scenarios that failed in both periods (0072, 0074, 0162) and the
+   write-action ones (0133, 0236, 0242). Confirm each flag by hand, because the judge can be wrong.
 2. Add each confirmed failure as a new evaluation case in the Homework 6 suite, so CI checks it on every change.
 3. Record any new kind of failure found while reading as a new failure mode.
 4. Fix the cause, which is likely in the system prompt. Then check that CI passes and that the next monitoring
